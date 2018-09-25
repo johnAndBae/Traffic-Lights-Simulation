@@ -1,4 +1,5 @@
 import java.awt.*;
+
 import objectdraw.*;
 
 public class simulationController extends WindowController {
@@ -33,7 +34,7 @@ public class simulationController extends WindowController {
 	private static final int BROKEN_LINE_OFFSET = (GRASS_X / 8) + 10;
 	private static final int BROKEN_LINE_DISTANCE = BROKEN_LINE_LENGTH + BROKEN_LINE_OFFSET;
 	
-	private static final int LEFT_TURN_LINE_LENGTH = GRASS_Y / 2 + (GRASS_Y / 2);
+	//private static final int LEFT_TURN_LINE_LENGTH = GRASS_Y / 2 + (GRASS_Y / 2);
 	
 	private static final int LINE_WIDTH = 6;
 	private static final int LINE_OFFSET = LINE_WIDTH / 2;
@@ -57,10 +58,10 @@ public class simulationController extends WindowController {
 				LINE_WIDTH * 2, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
 		stopLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y, LINE_WIDTH * 2, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
 
-		leftTurnLineT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_Y / 2, LINE_WIDTH, GRASS_Y / 2, canvas );
-		leftTurnLineB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH, LINE_WIDTH, GRASS_Y / 2, canvas );
-		leftTurnLineL = new FilledRect( GRASS_X / 2, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_X / 2, LINE_WIDTH, canvas );
-		leftTurnLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y + LANE_WIDTH - LINE_OFFSET, LEFT_TURN_LINE_LENGTH, LINE_WIDTH, canvas );
+		leftTurnLineT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, BROKEN_LINE_DISTANCE, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
+		leftTurnLineB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
+		leftTurnLineL = new FilledRect( GRASS_X / 3, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_X * 2/3, LINE_WIDTH, canvas );
+		leftTurnLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y + LANE_WIDTH - LINE_OFFSET, GRASS_X * 2/3, LINE_WIDTH, canvas );
 
 		/* White Broken Lines at the Top */
 		
@@ -76,7 +77,7 @@ public class simulationController extends WindowController {
 				0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		brokenLineTR2 = new FilledRect( GRASS_X + (LANE_WIDTH * 4) - LINE_OFFSET,
 				BROKEN_LINE_DISTANCE, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas);
-		brokenLineTR3 = new FilledRect( GRASS_X + (LANE_WIDTH * 4) + LINE_OFFSET,
+		brokenLineTR3 = new FilledRect( GRASS_X + (LANE_WIDTH * 4) - LINE_OFFSET,
 				BROKEN_LINE_DISTANCE * 2, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		
 		/* White Broken Lines at the Bottom of the Street */
@@ -96,10 +97,10 @@ public class simulationController extends WindowController {
 				FRAME_HEIGHT - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		
 		
-		brokenLineLT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_Y / 2, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
-		brokenLineLB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
-		brokenLineLR = new FilledRect( GRASS_X / 2 - BROKEN_LINE_DISTANCE, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
-		brokenLineLL = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y + LANE_WIDTH - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
+		brokenLineLT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, 0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
+		brokenLineLB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, FRAME_HEIGHT - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
+		brokenLineLL = new FilledRect( BROKEN_LINE_LENGTH, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
+		brokenLineLR = new FilledRect( FRAME_WIDTH - BROKEN_LINE_LENGTH * 2, GRASS_Y + LANE_WIDTH - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
 		
 		// Set colors
 		background.setColor( grass );
