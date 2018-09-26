@@ -20,6 +20,7 @@ public class Cars extends ActiveObject {
 	
 	//private DrawingCanvas canvas;
 	private FilledRoundedRect body, windshield, backWindshield;
+	private Lane direction;
 	
 	private Color yellowCar = new Color(121, 30, 35);
 	private Color blueCar = new Color(100, 130, 188);
@@ -32,17 +33,20 @@ public class Cars extends ActiveObject {
 	//double x, double y, double width, double height, double arcWidth, double arcHeight, DrawingCanvas canvas
 	// = new FilledRoundedRect ( 0, 0 , car_Height, car_Height, car_Height, car_Height, canvas );
 	
-	/* in parameters, (int lane, DrawingCanvas) */
-	public Cars (double x, double y, DrawingCanvas aCanvas) {
+	/* in parameters, (double x, double y, Lane whichLane, DrawingCanvas acanvas) */
+	public Cars (double x, double y, Lane whichLane, DrawingCanvas aCanvas) {
 		canvas = aCanvas;
+		direction = whichLane;
 		int color = random.nextInt(3);
-		body = new FilledRoundedRect(x, y, CAR_LENGTH, CAR_WIDTH, CAR_ANGLE, FRONT_ANGLE, canvas);
 		//windshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + WINDSHIELD_OFFSET);
 		
-		if(laneNumber == 1) {
-			laneDistance = LINAST_STOP_LENGTH;
-		} else {
+
+		if( whichLane == Lane.LL || whichLane == Lane.LR || whichLane == Lane.RL || whichLane == Lane.RR ) {
 			
+			body = new FilledRoundedRect(x, y, CAR_LENGTH, CAR_WIDTH, CAR_ANGLE, FRONT_ANGLE, canvas);
+		}
+		else {
+			body = new FilledRoundedRect(x, y, CAR_WIDTH, CAR_LENGTH, FRONT_ANGLE, CAR_ANGLE, canvas);
 		}
 		
 		if(color == 0) {
@@ -67,18 +71,80 @@ public class Cars extends ActiveObject {
 		//backWindshield.move(x, y);
 	}
 	
+	public void removeFromCanvas() {
+		
+		body.removeFromCanvas();
+	}
+	
 	public void run() {
 		
-		while(body.getY() < canvas.getWidth()) {
-			count++;
+		while( true ) {
+					
+			switch( direction ) {
+			
+			case TL:
+				move( 0, Y_MOVE );
+				break;
+				
+			case TM:
+				move( 0, Y_MOVE );
+				break;
+				
+			case TR:
+				move( 0, Y_MOVE );
+				break;
+				
+			case BL:
+				move( 0, - Y_MOVE );
+				break;
+				
+			case BM:
+				move( 0, - Y_MOVE );
+				break;
+				
+			case BR:
+				move( 0, - Y_MOVE );
+				break;
+				
+			case LL:
+				move( Y_MOVE, 0 );
+				break;
+				
+			case LR:
+				move( Y_MOVE, 0 );
+				break;
+				
+				
+			case RL:
+				move( - Y_MOVE, 0 );
+				break;
+				
+				
+			case RR:
+				move( - Y_MOVE, 0 );
+				break;
+				
+			}
+			
+			pause(DELAY_TIME);
+			
+			/*count++;
 			
 			if(count < SIGNAL_TIME) {
 				count++;
 				move(Y_MOVE, 0);
 				pause(DELAY_TIME);
 			}
+		*/	
+			if( (body.getX() + body.getWidth() < 0 || body.getX() > canvas.getWidth()) ||
+					(body.getY() + body.getHeight() < 0 || body.getY() > canvas.getHeight()) ) {
 			
+				removeFromCanvas();
+				break;
+			}
 		}
+		
+
 	}
 	
 	// To create another car when this car is clicked in a lane

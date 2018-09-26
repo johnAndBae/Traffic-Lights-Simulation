@@ -2,6 +2,11 @@ import java.awt.*;
 
 import objectdraw.*;
 
+enum Lane
+{
+	TL, TM, TR, BL, BM, BR, LL, LR, RL, RR
+}
+
 public class simulationController extends WindowController {
 
 	private static final int FRAME_WIDTH = 900;
@@ -39,6 +44,8 @@ public class simulationController extends WindowController {
 	private static final int LINE_WIDTH = 6;
 	private static final int LINE_OFFSET = LINE_WIDTH / 2;
 	private static final int STOP_WIDTH = LINE_WIDTH * 2;
+	
+	private static final int CAR_LENGTH = 70;
 	private static final int CAR_OFFSET = 7;
 	
 	public void begin() {
@@ -186,43 +193,43 @@ public class simulationController extends WindowController {
 	public void onMouseClick (Location point) {
 
 		if( laneTL.contains(point) ) {
-			new Cars( laneTL.getX() + CAR_OFFSET, 0, canvas);
+			new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL,  canvas);
 		}
 		
 		else if( laneTM.contains(point) ) {
-			new Cars( laneTM.getX() + CAR_OFFSET, 0, canvas);
+			new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TM, canvas);
 		}
 		
 		else if( laneTR.contains(point) ) {
-			new Cars( laneTR.getX() + CAR_OFFSET, 0, canvas);
+			new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, canvas);
 		}
 		
 		else if( laneBL.contains(point) ) {
-			new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+			new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, canvas);
 		}
 		
 		else if( laneBM.contains(point) ) {
-			new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+			new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, canvas);
 		}
 		
 		else if( laneBR.contains(point) ) {
-			new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+			new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, canvas);
 		}
 		
 		else if( laneLL.contains(point) ) {
-			new Cars( 0, laneLL.getY() + CAR_OFFSET, canvas);
+			new Cars( - CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, canvas);
 		}
 		
 		else if( laneLR.contains(point) ) {
-			new Cars( 0, laneLR.getY() + CAR_OFFSET, canvas);
+			new Cars( - CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, canvas);
 		}
 		
 		else if( laneRL.contains(point) ) {
-			new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, canvas);
+			new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, canvas);
 		}
 		
 		else if( laneRR.contains(point) ) {
-			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, canvas);
+			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, canvas);
 		}
 	}
 	
