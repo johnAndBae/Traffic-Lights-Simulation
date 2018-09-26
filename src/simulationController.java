@@ -13,17 +13,18 @@ public class simulationController extends WindowController {
 	brokenLineTR1, brokenLineTR2, brokenLineTR3,
 	brokenLineBR1, brokenLineBR2, brokenLineBR3,
 	brokenLineBL1, brokenLineBL2, brokenLineBL3,
-	brokenLineLL, brokenLineLR, brokenLineLT, brokenLineLB;
+	brokenLineLL, brokenLineLR, brokenLineLT, brokenLineLB,
+	laneTL, laneTM, laneTR, laneBL, laneBM, laneBR, laneLL, laneLR, laneRL, laneRR;
 	
 	
-	private Color streetColor = Color.GRAY;
+	private Color streetColor = Color.DARK_GRAY;
 	private Color yellowLine = Color.YELLOW;
 	private Color regularLine = Color.WHITE;
 	private Color grass = new Color( 0, 200, 0 );
 	
 	public static final int LANE_WIDTH = 60;
 	
-	/* Lane Size * Number of Lanes */
+	// Lane Size * Number of Lanes
 	private static final int MAIN_ST_WIDTH = LANE_WIDTH * 5;
 	private static final int LINA_ST_WIDTH = LANE_WIDTH * 3;
 	
@@ -34,10 +35,11 @@ public class simulationController extends WindowController {
 	private static final int BROKEN_LINE_OFFSET = (GRASS_X / 8) + 10;
 	private static final int BROKEN_LINE_DISTANCE = BROKEN_LINE_LENGTH + BROKEN_LINE_OFFSET;
 	
-	//private static final int LEFT_TURN_LINE_LENGTH = GRASS_Y / 2 + (GRASS_Y / 2);
 	
 	private static final int LINE_WIDTH = 6;
 	private static final int LINE_OFFSET = LINE_WIDTH / 2;
+	private static final int STOP_WIDTH = LINE_WIDTH * 2;
+	private static final int CAR_OFFSET = 7;
 	
 	public void begin() {
 		// Draw streets and lines
@@ -51,21 +53,25 @@ public class simulationController extends WindowController {
 		yellowLineL = new FilledRect( 0, GRASS_Y + LANE_WIDTH - LINE_OFFSET, GRASS_X, LINE_WIDTH, canvas);
 		yellowLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_X, LINE_WIDTH, canvas);
 		
-		stopLineT = new FilledRect( GRASS_X, GRASS_Y - LINE_WIDTH * 2, LANE_WIDTH * 3 - LINE_OFFSET, LINE_WIDTH * 2, canvas );
-		stopLineB = new FilledRect( GRASS_X + LANE_WIDTH * 2 + LINE_OFFSET, 
-				GRASS_Y + LINA_ST_WIDTH, LANE_WIDTH * 3 - LINE_OFFSET, LINE_WIDTH * 2, canvas );
-		stopLineL = new FilledRect( GRASS_X - LINE_WIDTH * 2, GRASS_Y + LANE_WIDTH + LINE_OFFSET,
-				LINE_WIDTH * 2, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
-		stopLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y, LINE_WIDTH * 2, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
+		stopLineT = new FilledRect( GRASS_X, GRASS_Y - STOP_WIDTH, LANE_WIDTH * 3 - LINE_OFFSET, STOP_WIDTH, canvas );
+		stopLineB = new FilledRect( GRASS_X + LANE_WIDTH  * 2 + LINE_OFFSET, 
+				GRASS_Y + LINA_ST_WIDTH, LANE_WIDTH * 3 - LINE_OFFSET, STOP_WIDTH, canvas );
+		stopLineL = new FilledRect( GRASS_X - STOP_WIDTH, GRASS_Y + LANE_WIDTH + LINE_OFFSET,
+				STOP_WIDTH, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
+		stopLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y, STOP_WIDTH, LANE_WIDTH * 2 - LINE_OFFSET, canvas );
 
-		leftTurnLineT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, BROKEN_LINE_DISTANCE, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
-		leftTurnLineB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
-		leftTurnLineL = new FilledRect( GRASS_X / 3, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, GRASS_X * 2/3, LINE_WIDTH, canvas );
-		leftTurnLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH, GRASS_Y + LANE_WIDTH - LINE_OFFSET, GRASS_X * 2/3, LINE_WIDTH, canvas );
+		leftTurnLineT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET,
+				BROKEN_LINE_DISTANCE, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
+		leftTurnLineB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET,
+				GRASS_Y + LINA_ST_WIDTH, LINE_WIDTH, GRASS_Y - BROKEN_LINE_DISTANCE, canvas );
+		leftTurnLineL = new FilledRect( GRASS_X / 3, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET,
+				GRASS_X * 2/3, LINE_WIDTH, canvas );
+		leftTurnLineR = new FilledRect( GRASS_X + MAIN_ST_WIDTH,
+				GRASS_Y + LANE_WIDTH - LINE_OFFSET, GRASS_X * 2/3, LINE_WIDTH, canvas );
 
-		/* White Broken Lines at the Top */
+		// White Broken Lines at the Top
 		
-		/* At the very Top */
+		// At the very Top
 		brokenLineTL1 = new FilledRect( GRASS_X + LANE_WIDTH - LINE_OFFSET, 
 				0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		brokenLineTL2 = new FilledRect( GRASS_X + LANE_WIDTH - LINE_OFFSET, 
@@ -80,8 +86,7 @@ public class simulationController extends WindowController {
 		brokenLineTR3 = new FilledRect( GRASS_X + (LANE_WIDTH * 4) - LINE_OFFSET,
 				BROKEN_LINE_DISTANCE * 2, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		
-		/* White Broken Lines at the Bottom of the Street */
-
+		// White Broken Lines at the Bottom of the Street
 		brokenLineBL1 = new FilledRect( GRASS_X + LANE_WIDTH - LINE_OFFSET, 
 				FRAME_HEIGHT - (BROKEN_LINE_DISTANCE * 2) - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		brokenLineBL2 = new FilledRect( GRASS_X + LANE_WIDTH - LINE_OFFSET, 
@@ -97,11 +102,30 @@ public class simulationController extends WindowController {
 				FRAME_HEIGHT - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
 		
 		
-		brokenLineLT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET, 0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
-		brokenLineLB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, FRAME_HEIGHT - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
-		brokenLineLL = new FilledRect( BROKEN_LINE_LENGTH, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
-		brokenLineLR = new FilledRect( FRAME_WIDTH - BROKEN_LINE_LENGTH * 2, GRASS_Y + LANE_WIDTH - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
+		brokenLineLT = new FilledRect( GRASS_X + LANE_WIDTH * 2 - LINE_OFFSET,
+				0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
+		brokenLineLB = new FilledRect( GRASS_X + LANE_WIDTH * 3 - LINE_OFFSET, 
+				FRAME_HEIGHT - BROKEN_LINE_LENGTH, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas );
+		brokenLineLL = new FilledRect( BROKEN_LINE_LENGTH, GRASS_Y + LANE_WIDTH * 2 - LINE_OFFSET,
+				BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
+		brokenLineLR = new FilledRect( FRAME_WIDTH - BROKEN_LINE_LENGTH * 2, 
+				GRASS_Y + LANE_WIDTH - LINE_OFFSET, BROKEN_LINE_LENGTH, LINE_WIDTH, canvas );
 		
+		
+		laneTL = new FilledRect( GRASS_X + LANE_WIDTH * 2 + LINE_OFFSET, 0, LANE_WIDTH - LINE_WIDTH, GRASS_Y - STOP_WIDTH, canvas );
+		laneTM = new FilledRect( GRASS_X + LANE_WIDTH + LINE_OFFSET, 0, LANE_WIDTH - LINE_WIDTH, GRASS_Y - STOP_WIDTH, canvas );
+		laneTR = new FilledRect( GRASS_X, 0, LANE_WIDTH - LINE_OFFSET, GRASS_Y - STOP_WIDTH, canvas );
+
+		laneBL = new FilledRect( GRASS_X + LANE_WIDTH * 2 + LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH + STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, GRASS_Y - STOP_WIDTH, canvas );
+		laneBM = new FilledRect( GRASS_X + LANE_WIDTH * 3 + LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH + STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, GRASS_Y - STOP_WIDTH, canvas );
+		laneBR = new FilledRect( GRASS_X + LANE_WIDTH * 4 + LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH + STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, GRASS_Y - STOP_WIDTH, canvas );
+
+		laneLL = new FilledRect( 0, GRASS_Y + LANE_WIDTH + LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, canvas );
+		laneLR = new FilledRect( 0, GRASS_Y + LANE_WIDTH * 2+ LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, canvas );
+
+		laneRL = new FilledRect( GRASS_X + MAIN_ST_WIDTH + STOP_WIDTH, GRASS_Y + LANE_WIDTH + LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, canvas );
+		laneRR = new FilledRect( GRASS_X + MAIN_ST_WIDTH + STOP_WIDTH, GRASS_Y, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, canvas );
+
 		// Set colors
 		background.setColor( grass );
 		mainSt.setColor( streetColor );
@@ -143,10 +167,63 @@ public class simulationController extends WindowController {
 		brokenLineLL.setColor( regularLine );
 		brokenLineLR.setColor( regularLine );
 		
+		laneTL.setColor( streetColor );
+		laneTM.setColor( streetColor );
+		laneTR.setColor( streetColor );
+		
+		laneBL.setColor( streetColor );
+		laneBM.setColor( streetColor );
+		laneBR.setColor( streetColor );
+		
+		laneLL.setColor( streetColor );
+		laneLR.setColor( streetColor );
+		
+		laneRL.setColor( streetColor );
+		laneRR.setColor( streetColor );
+
 	}
 	
 	public void onMouseClick (Location point) {
-		new Cars(point, canvas);
+
+		if( laneTL.contains(point) ) {
+			new Cars( laneTL.getX() + CAR_OFFSET, 0, canvas);
+		}
+		
+		else if( laneTM.contains(point) ) {
+			new Cars( laneTM.getX() + CAR_OFFSET, 0, canvas);
+		}
+		
+		else if( laneTR.contains(point) ) {
+			new Cars( laneTR.getX() + CAR_OFFSET, 0, canvas);
+		}
+		
+		else if( laneBL.contains(point) ) {
+			new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+		}
+		
+		else if( laneBM.contains(point) ) {
+			new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+		}
+		
+		else if( laneBR.contains(point) ) {
+			new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, canvas);
+		}
+		
+		else if( laneLL.contains(point) ) {
+			new Cars( 0, laneLL.getY() + CAR_OFFSET, canvas);
+		}
+		
+		else if( laneLR.contains(point) ) {
+			new Cars( 0, laneLR.getY() + CAR_OFFSET, canvas);
+		}
+		
+		else if( laneRL.contains(point) ) {
+			new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, canvas);
+		}
+		
+		else if( laneRR.contains(point) ) {
+			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, canvas);
+		}
 	}
 	
 	public static void main(String[] args) {

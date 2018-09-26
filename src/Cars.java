@@ -37,7 +37,7 @@ public class Cars extends ActiveObject {
 		canvas = aCanvas;
 		int color = random.nextInt(3);
 		body = new FilledRoundedRect(x, y, CAR_LENGTH, CAR_WIDTH, CAR_ANGLE, FRONT_ANGLE, canvas);
-		windshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + WINDSHIELD_OFFSET);
+		//windshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + WINDSHIELD_OFFSET);
 		
 		if(laneNumber == 1) {
 			laneDistance = LINAST_STOP_LENGTH;
