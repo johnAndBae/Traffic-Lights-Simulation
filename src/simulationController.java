@@ -21,7 +21,7 @@ public class simulationController extends WindowController {
 	private Color regularLine = Color.WHITE;
 	private Color grass = new Color( 0, 200, 0 );
 	
-	private static final int LANE_WIDTH = 60;
+	public static final int LANE_WIDTH = 60;
 	
 	/* Lane Size * Number of Lanes */
 	private static final int MAIN_ST_WIDTH = LANE_WIDTH * 5;
@@ -145,9 +145,8 @@ public class simulationController extends WindowController {
 		
 	}
 	
-	
 	public void onMouseClick (Location point) {
-		//new createCars( );
+		new Cars(point, canvas);
 	}
 	
 	public static void main(String[] args) {
