@@ -25,7 +25,7 @@ public class simulationController extends WindowController {
 	private Color streetColor = Color.DARK_GRAY;
 	private Color yellowLine = Color.YELLOW;
 	private Color regularLine = Color.WHITE;
-	private Color grass = new Color( 0, 200, 0 );
+	private Color grass = new Color( 0, 200, 150 );
 	
 	public static final int LANE_WIDTH = 60;
 	
