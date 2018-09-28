@@ -2,8 +2,7 @@ import java.awt.*;
 
 import objectdraw.*;
 
-enum Lane
-{
+enum Lane {
 	TL, TM, TR, BL, BM, BR, LL, LR, RL, RR
 }
 
