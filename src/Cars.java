@@ -7,29 +7,21 @@ public class Cars extends ActiveObject {
 	private static final double CAR_WIDTH = 40;
 	private static final double CAR_ANGLE = 20;
 	private static final double FRONT_ANGLE = 90;
-	private static final double WINDSHIELD_OFFSET = CAR_LENGTH - 30;
+	private static final double WINDSHIELD_OFFSET = 40;
 	private static final double BACKSHIELD_SIDE_OFFSET = 6;
 	private static final double WINDSHIELD_SIDE_OFFSET = 3;
 	private static final double WINDSHIELD_LENGTH = 18;
 	private static final double WINDSHIELD_WIDTH = 35;
 	private static final double WINDSHIELD_ANGLE = 15;
-	private static final double WINDSHIELD_CURVE_ANGLE = 20;
 	private static final double BACKSHIELD_LENGTH = 15;
 	private static final double BACKSHIELD_WIDTH = 30;
 	private static final double BACKSHIELD_ANGLE = 10;
 	private static final double BACKSHIELD_CURVE_ANGLE = 20;
-	private static final double BACKSHIELD_OFFSET = CAR_LENGTH - 60;
+	private static final double BACKSHIELD_OFFSET = 10;
 	private static final double ROOF_LENGTH = 35;
 	private static final double ROOF_WIDTH = 30;
 	private static final double ROOF_ANGLE = 20;
 	private static final int ROOF_OFFSET = 15;
-	
-	private static int SIGNAL_TIME = 60;
-	private static int LINAST_STOP_LENGTH = 210;
-	private static int MAINST_STOP_LENGTH = 300;
-	private int laneDistance;
-	private int laneNumber = 1;
-	private int count = 0;
 	
 	//private DrawingCanvas canvas;
 	private FilledRoundedRect body, windshield, backWindshield, roof;
@@ -47,10 +39,6 @@ public class Cars extends ActiveObject {
 	private DrawingCanvas canvas;
 	Random random = new Random();
 	
-	//double x, double y, double width, double height, double arcWidth, double arcHeight, DrawingCanvas canvas
-	// = new FilledRoundedRect ( 0, 0 , car_Height, car_Height, car_Height, car_Height, canvas );
-	
-	/* in parameters, (double x, double y, Lane whichLane, DrawingCanvas acanvas) */
 	public Cars (double x, double y, Lane whichLane, DrawingCanvas aCanvas) {
 		canvas = aCanvas;
 		direction = whichLane;
@@ -71,6 +59,7 @@ public class Cars extends ActiveObject {
 						ROOF_ANGLE, ROOF_ANGLE, canvas);
 				windshield.setColor(windshieldColor);
 				backWindshield.setColor(windshieldColor);
+				
 			} else {
 				windshield = new FilledRoundedRect(x + BACKSHIELD_OFFSET, y + WINDSHIELD_SIDE_OFFSET,
 						WINDSHIELD_LENGTH, WINDSHIELD_WIDTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
@@ -86,6 +75,30 @@ public class Cars extends ActiveObject {
 		}
 		else {
 			body = new FilledRoundedRect(x, y, CAR_WIDTH, CAR_LENGTH, FRONT_ANGLE, CAR_ANGLE, canvas);
+			
+			if(whichLane == Lane.BL || whichLane == Lane.BM || whichLane == Lane.BR) {
+				windshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
+						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
+				backWindshield = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + WINDSHIELD_OFFSET,
+						BACKSHIELD_WIDTH, BACKSHIELD_LENGTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
+				roof = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + ROOF_OFFSET, ROOF_WIDTH, ROOF_LENGTH,
+						ROOF_ANGLE, ROOF_ANGLE, canvas);
+				windshield.setColor(windshieldColor);
+				backWindshield.setColor(windshieldColor);
+				
+			} else {
+				
+				backWindshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
+						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
+				windshield = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + WINDSHIELD_OFFSET,
+						BACKSHIELD_WIDTH, BACKSHIELD_LENGTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
+				roof = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + ROOF_OFFSET, ROOF_WIDTH, ROOF_LENGTH,
+						ROOF_ANGLE, ROOF_ANGLE, canvas);
+				windshield.setColor(windshieldColor);
+				backWindshield.setColor(windshieldColor);	
+			}
+		
+		
 		}
 		
 		
@@ -182,6 +195,7 @@ public class Cars extends ActiveObject {
 			
 			pause(DELAY_TIME);
 			
+			// not working
 			if( (body.getX() + body.getWidth() < 0 || body.getX() > canvas.getWidth()) ||
 					(body.getY() + body.getHeight() < 0 || body.getY() > canvas.getHeight()) ) {
 			
