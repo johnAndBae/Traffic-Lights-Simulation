@@ -8,8 +8,8 @@ enum Lane {
 
 public class simulationController extends WindowController {
 
-	private static final int FRAME_WIDTH = 900;
-	private static final int FRAME_HEIGHT = 600;
+	public static final int FRAME_WIDTH = 900;
+	public static final int FRAME_HEIGHT = 600;
 	private FilledRect background, mainSt, linaSt, yellowLineT, yellowLineB, 
 	yellowLineL, yellowLineR, stopLineB, stopLineT, stopLineL, stopLineR,
 	leftTurnLineL, leftTurnLineR, leftTurnLineT, leftTurnLineB, 
@@ -24,16 +24,16 @@ public class simulationController extends WindowController {
 	private Color streetColor = Color.DARK_GRAY;
 	private Color yellowLine = Color.YELLOW;
 	private Color regularLine = Color.WHITE;
-	private Color grass = new Color( 0, 200, 0 );
+	private Color grass = new Color( 0, 200, 150 );
 	
 	public static final int LANE_WIDTH = 60;
 	
 	// Lane Size * Number of Lanes
-	private static final int MAIN_ST_WIDTH = LANE_WIDTH * 5;
-	private static final int LINA_ST_WIDTH = LANE_WIDTH * 3;
+	public static final int MAIN_ST_WIDTH = LANE_WIDTH * 5;
+	public static final int LINA_ST_WIDTH = LANE_WIDTH * 3;
 	
-	private static final int GRASS_X = (FRAME_WIDTH - MAIN_ST_WIDTH) / 2;
-	private static final int GRASS_Y = (FRAME_HEIGHT - LINA_ST_WIDTH) / 2;
+	public static final int GRASS_X = (FRAME_WIDTH - MAIN_ST_WIDTH) / 2;
+	public static final int GRASS_Y = (FRAME_HEIGHT - LINA_ST_WIDTH) / 2;
 	
 	private static final int BROKEN_LINE_LENGTH = (GRASS_X / 8) - 10;
 	private static final int BROKEN_LINE_OFFSET = (GRASS_X / 8) + 10;
@@ -187,6 +187,8 @@ public class simulationController extends WindowController {
 		laneRL.setColor( streetColor );
 		laneRR.setColor( streetColor );
 
+		
+		new Signals( canvas );
 	}
 	
 	public void onMouseClick (Location point) {
