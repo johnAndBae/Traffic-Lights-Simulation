@@ -10,7 +10,9 @@ public class Signals extends ActiveObject {
 	private static final int BOTTOM_ANGLE = 20;
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
+	private static boolean leftTurn;
 	
+	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
 
 	private static Color defaultLightColor = Color.DARK_GRAY;
@@ -21,8 +23,8 @@ public class Signals extends ActiveObject {
 	public Signals( double x, double y, boolean isLeftTurn, DrawingCanvas canvas ) {
 	
 		// Create the body of signal
-		new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
-	
+		signalBody = new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
+		leftTurn = isLeftTurn;
 
 
 		// Need to draw arrows for left-turn signals
@@ -46,8 +48,17 @@ public class Signals extends ActiveObject {
 			greenLight.setColor(green);
 		}
 
-
 	}
+	
+	public boolean contains( Location point ) {
+		
+		if( signalBody.contains(point) || redLight.contains(point) || yellowLight.contains(point) || greenLight.contains(point) ) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	
 	public Color getSignal() {
 		
@@ -59,30 +70,43 @@ public class Signals extends ActiveObject {
 	}
 	
 	public void turnGreen() {
-		/*redLight.setColor(defaultLightColor);
-		yellowLight.setColor(yellow);
-		
-		pause(1000);
-		
+
 		redLight.setColor(defaultLightColor);
-		
-		pause(1000);
-		yellowLight.setColor(yellow);
-		
+				
+		yellowLight.setColor(defaultLightColor);
 		pause(1000);
 		
 		yellowLight.setColor(defaultLightColor);
-		greenLight.setColor(green);*/
+		greenLight.setColor(green);
+		pause(1000);
 	}
 
 	public void turnRed() {
 		
-		greenLight.setColor(defaultLightColor);
-		yellowLight.setColor(yellow);
 		
+		greenLight.setColor(defaultLightColor);
+		
+		yellowLight.setColor(yellow);
 		pause(1000);
 		
 		yellowLight.setColor(defaultLightColor);
 		redLight.setColor(red);
+		pause(1000);
+	}
+	
+	public void run() {
+		
+		while(true) {
+
+			if( getSignal() == green ) {
+				turnRed();
+			}
+			else {
+				turnGreen();
+			}
+			
+			pause (3000);
+		}
+		
 	}
 }
