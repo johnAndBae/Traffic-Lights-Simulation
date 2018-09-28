@@ -41,10 +41,10 @@ public class Cars extends ActiveObject {
 	
 	public Cars (double x, double y, Lane whichLane, DrawingCanvas aCanvas) {
 		canvas = aCanvas;
-		direction = whichLane;
-		int color = random.nextInt(6);
-		//windshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + WINDSHIELD_OFFSET);
 		
+		direction = whichLane;
+		
+		int color = random.nextInt(6);
 
 		if( whichLane == Lane.LL || whichLane == Lane.LR || whichLane == Lane.RL || whichLane == Lane.RR ) {
 	
@@ -75,7 +75,7 @@ public class Cars extends ActiveObject {
 		}
 		else {
 			body = new FilledRoundedRect(x, y, CAR_WIDTH, CAR_LENGTH, FRONT_ANGLE, CAR_ANGLE, canvas);
-			
+			//to fix: the windshields
 			if(whichLane == Lane.BL || whichLane == Lane.BM || whichLane == Lane.BR) {
 				windshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
 						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
@@ -87,7 +87,7 @@ public class Cars extends ActiveObject {
 				backWindshield.setColor(windshieldColor);
 				
 			} else {
-				
+				//to fix: the windshields
 				backWindshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
 						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
 				windshield = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + WINDSHIELD_OFFSET,
@@ -100,7 +100,6 @@ public class Cars extends ActiveObject {
 		
 		
 		}
-		
 		
 		if(color == 0) {
 			body.setColor(blueCar);
@@ -123,10 +122,7 @@ public class Cars extends ActiveObject {
 		}
 		
 		start();
-	}
-		//windshield = new FilledRoundedRect();
-		//backWindshield = new FilledRoundedRect();
-			
+	}	
 	
 	// To implement the car's movements.
 	public void move ( double x, double y ) {
@@ -135,6 +131,7 @@ public class Cars extends ActiveObject {
 		windshield.move(x, y);
 		backWindshield.move(x, y);
 		roof.move(x, y);
+		
 	}
 	
 	public void removeFromCanvas() {
