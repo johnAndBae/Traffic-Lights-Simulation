@@ -11,6 +11,7 @@ public class Signals extends ActiveObject {
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
 	
+	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
 
 	private static Color defaultLightColor = Color.DARK_GRAY;
@@ -21,7 +22,7 @@ public class Signals extends ActiveObject {
 	public Signals( double x, double y, boolean isLeftTurn, DrawingCanvas canvas ) {
 	
 		// Create the body of signal
-		new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
+		signalBody = new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
 	
 
 
@@ -46,7 +47,17 @@ public class Signals extends ActiveObject {
 			greenLight.setColor(green);
 		}
 
+		start();
 
+	}
+	
+	public boolean contains( Location point ) {
+		
+		if( signalBody.contains(point) || redLight.contains(point) || yellowLight.contains(point) || greenLight.contains(point) ) {
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	public Color getSignal() {
@@ -54,29 +65,28 @@ public class Signals extends ActiveObject {
 		if( redLight.getColor() == red ) {
 			return red;
 		}
-		else
-			return green;
+		else if( yellowLight.getColor() == yellow ) {
+			return yellow;
+		}
+		else return green;
 	}
 	
 	public void turnGreen() {
-		/*redLight.setColor(defaultLightColor);
-		yellowLight.setColor(yellow);
-		
-		pause(1000);
-		
+
 		redLight.setColor(defaultLightColor);
-		
-		pause(1000);
 		yellowLight.setColor(yellow);
 		
+
 		pause(1000);
 		
 		yellowLight.setColor(defaultLightColor);
-		greenLight.setColor(green);*/
+		greenLight.setColor(green);
+		pause(1000);
+
 	}
 
 	public void turnRed() {
-		
+
 		greenLight.setColor(defaultLightColor);
 		yellowLight.setColor(yellow);
 		
@@ -84,5 +94,10 @@ public class Signals extends ActiveObject {
 		
 		yellowLight.setColor(defaultLightColor);
 		redLight.setColor(red);
+		pause(1000);
+
+	}
+	
+	public void run() {
 	}
 }
