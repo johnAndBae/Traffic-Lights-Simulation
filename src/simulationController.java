@@ -48,12 +48,14 @@ public class simulationController extends WindowController {
 	private static final int CAR_LENGTH = 70;
 	private static final int CAR_OFFSET = 7;
 	
-	
 	private static final int SIGNAL_OFFSET = 20;
 	private static final int SIGNAL_BODY_WIDTH = 40;
 	private static final int SIGNAL_BODY_HEIGHT = 120;
 	
 	public static final int beforeStopLineT = GRASS_Y - STOP_WIDTH;
+	public static final int beforeStopLineB = FRAME_HEIGHT - GRASS_Y + STOP_WIDTH;
+	public static final int beforeStopLineL = GRASS_X - STOP_WIDTH;
+	public static final int beforeStopLineR = FRAME_WIDTH - GRASS_X + STOP_WIDTH;
 	
 	public void begin() {
 		// Draw streets and lines
