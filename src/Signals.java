@@ -10,6 +10,7 @@ public class Signals extends ActiveObject {
 	private static final int BOTTOM_ANGLE = 20;
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
+	private static boolean leftTurn;
 	
 	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
@@ -23,7 +24,8 @@ public class Signals extends ActiveObject {
 	
 		// Create the body of signal
 		signalBody = new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
-	
+
+		leftTurn = isLeftTurn;
 
 
 		// Need to draw arrows for left-turn signals
@@ -56,10 +58,10 @@ public class Signals extends ActiveObject {
 		if( signalBody.contains(point) || redLight.contains(point) || yellowLight.contains(point) || greenLight.contains(point) ) {
 			return true;
 		}
-		else
-			return false;
+		
+		return false;
 	}
-	
+		
 	public Color getSignal() {
 		
 		if( redLight.getColor() == red ) {
@@ -73,31 +75,39 @@ public class Signals extends ActiveObject {
 	
 	public void turnGreen() {
 
-		redLight.setColor(defaultLightColor);
-		yellowLight.setColor(yellow);
-		
-
-		pause(1000);
-		
 		yellowLight.setColor(defaultLightColor);
 		greenLight.setColor(green);
-		pause(1000);
-
 	}
 
-	public void turnRed() {
-
+	public void turnYellow() {
+		
+		redLight.setColor(defaultLightColor);
 		greenLight.setColor(defaultLightColor);
 		yellowLight.setColor(yellow);
-		
-		pause(1000);
+	}
+	public void turnRed() {
 		
 		yellowLight.setColor(defaultLightColor);
 		redLight.setColor(red);
-		pause(1000);
-
 	}
 	
 	public void run() {
+		
+		while(true) {
+
+			if( getSignal() == green ) {
+				turnYellow();
+				pause(2000);
+				turnRed();
+			}
+			else {
+				turnYellow();
+				pause(2000);
+				turnGreen();
+			}
+			
+			pause (2000);
+		}
+		
 	}
 }

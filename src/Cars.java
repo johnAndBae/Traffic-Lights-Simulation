@@ -22,11 +22,16 @@ public class Cars extends ActiveObject {
 	private static final double ROOF_WIDTH = 30;
 	private static final double ROOF_ANGLE = 20;
 	private static final int ROOF_OFFSET = 15;
+	private static final int STOP_OFFSET = 15;
 	
 	//private DrawingCanvas canvas;
 	private FilledRoundedRect body, windshield, backWindshield, roof;
 	private Lane direction;
-	
+	private Signals laneSignal;
+	private int signalTime;
+	private int linaStDistance = 210;
+	private int mainStDistance = 300;
+	private int distance;
 	private Color yellowCar = new Color(255, 217, 0);
 	private Color blueCar = new Color(7, 47, 122);
 	private Color purpleCar = new Color(90, 0, 68);
@@ -39,9 +44,9 @@ public class Cars extends ActiveObject {
 	private DrawingCanvas canvas;
 	Random random = new Random();
 	
-	public Cars (double x, double y, Lane whichLane, DrawingCanvas aCanvas) {
+	public Cars (double x, double y, Lane whichLane, Signals signal, DrawingCanvas aCanvas) {
 		canvas = aCanvas;
-		
+		laneSignal = signal;
 		direction = whichLane;
 		
 		int color = random.nextInt(6);
@@ -60,6 +65,7 @@ public class Cars extends ActiveObject {
 				windshield.setColor(windshieldColor);
 				backWindshield.setColor(windshieldColor);
 				
+				
 			} else {
 				windshield = new FilledRoundedRect(x + BACKSHIELD_OFFSET, y + WINDSHIELD_SIDE_OFFSET,
 						WINDSHIELD_LENGTH, WINDSHIELD_WIDTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
@@ -71,6 +77,7 @@ public class Cars extends ActiveObject {
 				backWindshield.setColor(windshieldColor);	
 			}
 			
+			distance = linaStDistance;
 			
 		}
 		else {
@@ -98,7 +105,7 @@ public class Cars extends ActiveObject {
 				backWindshield.setColor(windshieldColor);	
 			}
 		
-		
+			distance = mainStDistance;
 		}
 		
 		if(color == 0) {
@@ -139,25 +146,78 @@ public class Cars extends ActiveObject {
 		body.removeFromCanvas();
 		windshield.removeFromCanvas();
 		backWindshield.removeFromCanvas();
+		roof.removeFromCanvas();
 		
 	}
 	
 	public void run() {
 		
+	/*	while(body.getX() > 0) {
+			
+			move(0, Y_MOVE);
+			pause(DELAY_TIME);
+		}
+		
+		while(laneSignal.getSignal() == Color.RED && body.getHeight() + body.getX() > distance) {
+			move(0, Y_MOVE);
+			pause(DELAY_TIME);
+			
+		} */
+		
 		while( true ) {
-					
+		
+		//if(laneSignal.getSignal() == Color.GREEN) {
 			switch( direction ) {
 			
 			case TL:
-				move( 0, Y_MOVE );
-				break;
+				
+				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
+					
+					move( 0, Y_MOVE );
+
+				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+					move (0, Y_MOVE);
+				}  else if (laneSignal.getSignal() == Color.GREEN){
+					move(0, Y_MOVE);
+				} else {
+					break;
+					
+				}
+				
+				break; 
 				
 			case TM:
-				move( 0, Y_MOVE );
+
+				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
+					
+					move( 0, Y_MOVE );
+
+				} 
+				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+					move (0, Y_MOVE);
+				}  
+				else if (laneSignal.getSignal() == Color.GREEN){
+					move(0, Y_MOVE);
+				} 
+				else {
+					break;
+				}	
 				break;
 				
 			case TR:
-				move( 0, Y_MOVE );
+				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
+					
+					move( 0, Y_MOVE );
+
+				}
+				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+					move (0, Y_MOVE);
+				}  else if (laneSignal.getSignal() == Color.GREEN){
+					move(0, Y_MOVE);
+				} else {
+					break;
+					
+				}	
 				break;
 				
 			case BL:
@@ -189,10 +249,10 @@ public class Cars extends ActiveObject {
 				break;
 				
 			}
-			
+	
 			pause(DELAY_TIME);
+		//}
 			
-			// not working
 			if( (body.getX() + body.getWidth() < 0 || body.getX() > canvas.getWidth()) ||
 					(body.getY() + body.getHeight() < 0 || body.getY() > canvas.getHeight()) ) {
 			
@@ -206,7 +266,7 @@ public class Cars extends ActiveObject {
 	
 	// To create another car when this car is clicked in a lane
 	public boolean contains ( Location point ) {
-		if( body.contains(point) || windshield.contains(point) || backWindshield.contains(point) ) {
+		if( body.contains(point) || windshield.contains(point) || backWindshield.contains(point)) {
 			return true;
 		}	
 		return false;
