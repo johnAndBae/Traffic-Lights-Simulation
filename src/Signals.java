@@ -97,12 +97,12 @@ public class Signals extends ActiveObject {
 
 			if( getSignal() == green ) {
 				turnYellow();
-				pause(2000);
+			//(2000);
 				turnRed();
 			}
 			else {
 				turnYellow();
-				pause(2000);
+			//	pause(2000);
 				turnGreen();
 			}
 			

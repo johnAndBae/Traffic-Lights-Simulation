@@ -1,5 +1,5 @@
 import java.awt.*;
-
+import java.util.*;
 import objectdraw.*;
 
 enum Lane {
@@ -56,6 +56,8 @@ public class simulationController extends WindowController {
 	public static final int beforeStopLineB = FRAME_HEIGHT - GRASS_Y + STOP_WIDTH;
 	public static final int beforeStopLineL = GRASS_X - STOP_WIDTH;
 	public static final int beforeStopLineR = FRAME_WIDTH - GRASS_X + STOP_WIDTH;
+	
+	public static LinkedList<Cars> carList = new LinkedList<Cars>();
 	
 	public void begin() {
 		// Draw streets and lines
@@ -225,7 +227,8 @@ public class simulationController extends WindowController {
 		}
 
 		if( laneTL.contains(point) ) {
-			new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas);
+			System.out.println("Car is pushed !");
+			carList.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
 		}
 		
 		else if( laneTM.contains(point) ) {
