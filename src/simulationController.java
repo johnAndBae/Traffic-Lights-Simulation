@@ -264,6 +264,8 @@ public class simulationController extends WindowController {
 			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
 		}
 	}
+	// Testing line, Remove this !!!
+	
 	
 	public static void main(String[] args) {
 		new Acme.MainFrame (new simulationController(), args, FRAME_WIDTH, FRAME_HEIGHT);
