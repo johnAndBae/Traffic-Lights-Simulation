@@ -247,44 +247,45 @@ public class simulationController extends WindowController {
 		
 		else if( laneTR.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, signalTS, canvas));
+			carListTR.add(new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, signalTS, canvas));
 		}
 		
 		else if( laneBL.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas));
+			carListBL.add(new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas));
 		}
 		
 		else if( laneBM.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas));
+			carListBM.add(new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas));
 		}
 		
 		else if( laneBR.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas));
+			carListBR.add(new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas));
 		}
 		
 		else if( laneLL.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( - CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas));
+			carListLL.add(new Cars( - CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas));
 		}
 		
 		else if( laneLR.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( - CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas));
+			carListLR.add(new Cars( - CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas));
 		}
 		
 		else if( laneRL.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas));
+			carListRL.add(new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas));
 		}
 		
 		else if( laneRR.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas));
+			carListRR.add(new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas));
 		}
 
+		// When a traffic signal is clicked, change signal.
 		else if( signalTS.contains(point) ) {
 
 			lightColor = signalTS.getSignal();
@@ -329,35 +330,35 @@ public class simulationController extends WindowController {
 		
 		else if( signalBL.contains(point) ) {
 			
-			if( signalBL.getSignal() == Color.GREEN ) {
-				signalBL.turnRed();
-			}
+			lightColor = signalBL.getSignal();
+			signalBL.remove();
+			signalBL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, lightColor, canvas );
 			
-			else {
-				signalBL.turnGreen();
+			for( index = 0; index < carListBL.size(); index++ ) {
+				carListBL.get(index).setSignal(signalBL);
 			}
 		}
 		
 		else if( signalLS.contains(point) ) {
 			
-			if( signalLS.getSignal() == Color.GREEN ) {
-				signalLS.turnRed();
-			}
+			lightColor = signalLS.getSignal();
+			signalLS.remove();
+			signalLS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, lightColor, canvas );
 			
-			else {
-				signalLS.turnGreen();
+			for( index = 0; index < carListLR.size(); index++ ) {
+				carListLR.get(index).setSignal(signalLS);
 			}
 		}
 		
 		
 		else if( signalLL.contains(point) ) {
 			
-			if( signalLL.getSignal() == Color.GREEN ) {
-				signalLL.turnRed();
-			}
+			lightColor = signalLL.getSignal();
+			signalLL.remove();
+			signalLL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, lightColor, canvas );
 			
-			else {
-				signalLL.turnGreen();
+			for( index = 0; index < carListLL.size(); index++ ) {
+				carListLL.get(index).setSignal(signalLL);
 			}
 		}
 		
