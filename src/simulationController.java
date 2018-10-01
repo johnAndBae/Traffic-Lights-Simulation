@@ -57,7 +57,10 @@ public class simulationController extends WindowController {
 	public static final int beforeStopLineL = GRASS_X - STOP_WIDTH;
 	public static final int beforeStopLineR = FRAME_WIDTH - GRASS_X + STOP_WIDTH;
 	
-	public static LinkedList<Cars> carList = new LinkedList<Cars>();
+	private static Color lightColor;
+	
+	public static LinkedList<Cars> carListTL, carListTM, carListTR, carListBL,
+	carListBM, carListBR, carListLL, carListLR, carListRL, carListRR;
 	
 	public void begin() {
 		// Draw streets and lines
@@ -199,74 +202,174 @@ public class simulationController extends WindowController {
 		laneRL.setColor( streetColor );
 		laneRR.setColor( streetColor );
 
-		signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, canvas );
-		signalTL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, canvas );
+		signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.RED, canvas );
+		signalTL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalBS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, canvas );
-		signalBL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, canvas );
+		signalBS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, Color.RED, canvas );
+		signalBL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalLS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, canvas );
-		signalLL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, canvas );
+		signalLS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, Color.GREEN, canvas );
+		signalLL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalRS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, canvas );
-		signalRL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, canvas );
+		signalRS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.GREEN, canvas );
+		signalRL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, Color.GREEN, canvas );
+
+		carListTL  = new LinkedList<Cars>();
+		carListTM  = new LinkedList<Cars>();
+		carListTR  = new LinkedList<Cars>();
+		
+		carListBL  = new LinkedList<Cars>();
+		carListBM  = new LinkedList<Cars>();
+		carListBR  = new LinkedList<Cars>();
+
+		carListLL  = new LinkedList<Cars>();
+		carListLR  = new LinkedList<Cars>();
+
+		carListRL  = new LinkedList<Cars>();
+		carListRR  = new LinkedList<Cars>();
+
 
 	}
 	
 	public void onMouseClick (Location point) {
 
-		if( signalTS.contains(point) ) {
-			
-			if( signalTS.getSignal() == Color.GREEN ) {
-				signalTS.turnRed();
-			}
-			
-			else {
-				signalTS.turnGreen();
-			}
-		}
-
 		if( laneTL.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carList.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
+			carListTL.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
 		}
 		
 		else if( laneTM.contains(point) ) {
-			new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TM, signalTS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TM, signalTS, canvas));
 		}
 		
 		else if( laneTR.contains(point) ) {
-			new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, signalTS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, signalTS, canvas));
 		}
 		
 		else if( laneBL.contains(point) ) {
-			new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas));
 		}
 		
 		else if( laneBM.contains(point) ) {
-			new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas));
 		}
 		
 		else if( laneBR.contains(point) ) {
-			new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas));
 		}
 		
 		else if( laneLL.contains(point) ) {
-			new Cars( - CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( - CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas));
 		}
 		
 		else if( laneLR.contains(point) ) {
-			new Cars( - CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( - CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas));
 		}
 		
 		else if( laneRL.contains(point) ) {
-			new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas));
 		}
 		
 		else if( laneRR.contains(point) ) {
-			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
+			System.out.println("Car is pushed !");
+			carListTM.add(new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas));
 		}
-	}	
+
+		else if( signalTS.contains(point) ) {
+
+			lightColor = signalTS.getSignal();
+			signalTS.remove();
+			signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, lightColor, canvas );
+		}
+		
+		else if( signalTL.contains(point) ) {
+			
+			if( signalTL.getSignal() == Color.GREEN ) {
+				signalTL.turnRed();
+			}
+			
+			else {
+				signalTL.turnGreen();
+			}
+		}
+		
+		else if( signalBS.contains(point) ) {
+			
+			if( signalBS.getSignal() == Color.GREEN ) {
+				signalBS.turnRed();
+			}
+			
+			else {
+				signalBS.turnGreen();
+			}
+		}
+		
+		else if( signalBL.contains(point) ) {
+			
+			if( signalBL.getSignal() == Color.GREEN ) {
+				signalBL.turnRed();
+			}
+			
+			else {
+				signalBL.turnGreen();
+			}
+		}
+		
+		else if( signalLS.contains(point) ) {
+			
+			if( signalLS.getSignal() == Color.GREEN ) {
+				signalLS.turnRed();
+			}
+			
+			else {
+				signalLS.turnGreen();
+			}
+		}
+		
+		
+		else if( signalLL.contains(point) ) {
+			
+			if( signalLL.getSignal() == Color.GREEN ) {
+				signalLL.turnRed();
+			}
+			
+			else {
+				signalLL.turnGreen();
+			}
+		}
+		
+		
+		else if( signalRS.contains(point) ) {
+			
+			if( signalRS.getSignal() == Color.GREEN ) {
+				signalRS.turnRed();
+			}
+			
+			else {
+				signalRS.turnGreen();
+			}
+		}
+		
+		else if( signalRL.contains(point) ) {
+			
+			if( signalRL.getSignal() == Color.GREEN ) {
+				signalRL.turnRed();
+			}
+			
+			else {
+				signalRL.turnGreen();
+			}
+		}
+	}
+	
 	
 	public static void main(String[] args) {
 		new Acme.MainFrame (new simulationController(), args, FRAME_WIDTH, FRAME_HEIGHT);
