@@ -151,40 +151,19 @@ public class Cars extends ActiveObject {
 		
 	}
 	
-<<<<<<< HEAD
 	public void popCar(LinkedList<Cars> laneList) {
 		if( beforeStopline && laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
 			System.out.println("Car is popped !");
 			laneList.removeFirst();
 			beforeStopline = false;
-=======
+
 	public void setSignal( Signals sig ) {
 		laneSignal = sig;
 	}
-	public void run() {
-		
-	/*	while(body.getX() > 0) {
-			
-			move(0, Y_MOVE);
-			pause(DELAY_TIME);
->>>>>>> branch 'master' of https://github.com/qownsgml93/Traffic-Lights-Simulation.git
-		}
-		
-		
-	}
-	
+
 	public void run() {
 		
 		while( true ) {
-<<<<<<< HEAD
-=======
-			
-			if( beforeStopline && simulationController.carListTL.isEmpty() == false ) {
-				System.out.println("Car is popped !");
-				simulationController.carListTL.removeFirst();
-				beforeStopline = false;
-			}
->>>>>>> branch 'master' of https://github.com/qownsgml93/Traffic-Lights-Simulation.git
 
 			switch( direction ) {
 			
@@ -192,27 +171,23 @@ public class Cars extends ActiveObject {
 				
 				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
-<<<<<<< HEAD
+
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
 					move(0, Y_MOVE);
 					if(firstTime) {
 						beforeStopline = true;
 						firstTime = false;
-						popCar(simulationController.carList);
+						popCar(simulationController.carListTL);
 					}
 				} else if (laneSignal.getSignal() == Color.GREEN && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT){
 					move(0, Y_MOVE);
 					if(firstTime) {
 						beforeStopline = true;
 						firstTime = false;
-						popCar(simulationController.carList);					}
-					
-=======
-
+						popCar(simulationController.carListTL);					}
+					}
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
-
->>>>>>> branch 'master' of https://github.com/qownsgml93/Traffic-Lights-Simulation.git
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
 				} else {
@@ -221,7 +196,7 @@ public class Cars extends ActiveObject {
 				}
 				
 				break; 
-				
+			/* START HERE */
 			case TM:
 				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
