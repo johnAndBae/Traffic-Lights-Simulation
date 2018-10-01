@@ -170,9 +170,9 @@ public class Cars extends ActiveObject {
 		
 		while( true ) {
 			
-			if( beforeStopline && simulationController.carList.isEmpty() == false ) {
+			if( beforeStopline && simulationController.carListTL.isEmpty() == false ) {
 				System.out.println("Car is popped !");
-				simulationController.carList.removeFirst();
+				simulationController.carListTL.removeFirst();
 				beforeStopline = false;
 			}
 
