@@ -157,6 +157,8 @@ public class Cars extends ActiveObject {
 			laneList.removeFirst();
 			beforeStopline = false;
 
+		}
+	}
 	public void setSignal( Signals sig ) {
 		laneSignal = sig;
 	}
@@ -184,7 +186,7 @@ public class Cars extends ActiveObject {
 					if(firstTime) {
 						beforeStopline = true;
 						firstTime = false;
-						popCar(simulationController.carListTL);					}
+						popCar(simulationController.carListTL);					
 					}
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
@@ -227,7 +229,7 @@ public class Cars extends ActiveObject {
 					
 				}	
 				break;
-				
+				//test
 			case BL:
 				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
