@@ -1,4 +1,5 @@
 import objectdraw.*;
+import java.util.*;
 import java.util.Random;
 import java.awt.*;
 
@@ -42,7 +43,8 @@ public class Cars extends ActiveObject {
 	private static int Y_MOVE = 5;
 	private static int DELAY_TIME = 30;
 	private DrawingCanvas canvas;
-	private static boolean beforeStopline = true;
+	private boolean beforeStopline = false;
+	private boolean firstTime = true;
 	Random random = new Random();
 	
 	public Cars (double x, double y, Lane whichLane, Signals signal, DrawingCanvas aCanvas) {
@@ -65,8 +67,6 @@ public class Cars extends ActiveObject {
 						ROOF_ANGLE, ROOF_ANGLE, canvas);
 				windshield.setColor(windshieldColor);
 				backWindshield.setColor(windshieldColor);
-				
-				
 			} else {
 				windshield = new FilledRoundedRect(x + BACKSHIELD_OFFSET, y + WINDSHIELD_SIDE_OFFSET,
 						WINDSHIELD_LENGTH, WINDSHIELD_WIDTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
@@ -151,30 +151,20 @@ public class Cars extends ActiveObject {
 		
 	}
 	
-	public void run() {
-		
-	/*	while(body.getX() > 0) {
-			
-			move(0, Y_MOVE);
-			pause(DELAY_TIME);
+	public void popCar(LinkedList<Cars> laneList) {
+		if( beforeStopline && laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
+			System.out.println("Car is popped !");
+			laneList.removeFirst();
+			beforeStopline = false;
 		}
 		
-		while(laneSignal.getSignal() == Color.RED && body.getHeight() + body.getX() > distance) {
-			move(0, Y_MOVE);
-			pause(DELAY_TIME);
-			
-		} */
+		
+	}
+	
+	public void run() {
 		
 		while( true ) {
-			
-			if( beforeStopline && simulationController.carList.isEmpty() == false ) {
-				System.out.println("Car is popped !");
-				simulationController.carList.removeFirst();
-				beforeStopline = false;
-			}
 
-		
-		//if(laneSignal.getSignal() == Color.GREEN) {
 			switch( direction ) {
 			
 			case TL:
@@ -183,6 +173,18 @@ public class Cars extends ActiveObject {
 					move( 0, Y_MOVE );
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
 					move(0, Y_MOVE);
+					if(firstTime) {
+						beforeStopline = true;
+						firstTime = false;
+						popCar(simulationController.carList);
+					}
+				} else if (laneSignal.getSignal() == Color.GREEN && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT){
+					move(0, Y_MOVE);
+					if(firstTime) {
+						beforeStopline = true;
+						firstTime = false;
+						popCar(simulationController.carList);					}
+					
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
 				} else {
@@ -193,11 +195,8 @@ public class Cars extends ActiveObject {
 				break; 
 				
 			case TM:
-
 				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
-					
 					move( 0, Y_MOVE );
-
 				} 
 				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
