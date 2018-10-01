@@ -24,6 +24,7 @@ public class Signals extends ActiveObject {
 	
 		// Create the body of signal
 		signalBody = new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
+
 		leftTurn = isLeftTurn;
 
 
@@ -48,6 +49,8 @@ public class Signals extends ActiveObject {
 			greenLight.setColor(green);
 		}
 
+		start();
+
 	}
 	
 	public boolean contains( Location point ) {
@@ -58,40 +61,34 @@ public class Signals extends ActiveObject {
 		
 		return false;
 	}
-	
-	
+		
 	public Color getSignal() {
 		
 		if( redLight.getColor() == red ) {
 			return red;
 		}
-		else
-			return green;
+		else if( yellowLight.getColor() == yellow ) {
+			return yellow;
+		}
+		else return green;
 	}
 	
 	public void turnGreen() {
 
-		redLight.setColor(defaultLightColor);
-				
-		yellowLight.setColor(defaultLightColor);
-		pause(1000);
-		
 		yellowLight.setColor(defaultLightColor);
 		greenLight.setColor(green);
-		pause(1000);
 	}
 
-	public void turnRed() {
+	public void turnYellow() {
 		
-		
+		redLight.setColor(defaultLightColor);
 		greenLight.setColor(defaultLightColor);
-		
 		yellowLight.setColor(yellow);
-		pause(1000);
+	}
+	public void turnRed() {
 		
 		yellowLight.setColor(defaultLightColor);
 		redLight.setColor(red);
-		pause(1000);
 	}
 	
 	public void run() {
@@ -99,13 +96,17 @@ public class Signals extends ActiveObject {
 		while(true) {
 
 			if( getSignal() == green ) {
+				turnYellow();
+				pause(2000);
 				turnRed();
 			}
 			else {
+				turnYellow();
+				pause(2000);
 				turnGreen();
 			}
 			
-			pause (3000);
+			pause (2000);
 		}
 		
 	}

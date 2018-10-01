@@ -212,7 +212,18 @@ public class simulationController extends WindowController {
 	}
 	
 	public void onMouseClick (Location point) {
-		
+
+		if( signalTS.contains(point) ) {
+			
+			if( signalTS.getSignal() == Color.GREEN ) {
+				signalTS.turnRed();
+			}
+			
+			else {
+				signalTS.turnGreen();
+			}
+		}
+
 		if( laneTL.contains(point) ) {
 			new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas);
 		}
