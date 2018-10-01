@@ -1,5 +1,5 @@
 import java.awt.*;
-
+import java.util.*;
 import objectdraw.*;
 
 enum Lane {
@@ -56,6 +56,10 @@ public class simulationController extends WindowController {
 	public static final int beforeStopLineB = FRAME_HEIGHT - GRASS_Y + STOP_WIDTH;
 	public static final int beforeStopLineL = GRASS_X - STOP_WIDTH;
 	public static final int beforeStopLineR = FRAME_WIDTH - GRASS_X + STOP_WIDTH;
+	
+	private static Color lightColor;
+	
+	public static LinkedList<Cars> carList = new LinkedList<Cars>();
 	
 	public void begin() {
 		// Draw streets and lines
@@ -197,24 +201,25 @@ public class simulationController extends WindowController {
 		laneRL.setColor( streetColor );
 		laneRR.setColor( streetColor );
 
-		signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, canvas );
-		signalTL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, canvas );
+		signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.RED, canvas );
+		signalTL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalBS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, canvas );
-		signalBL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, canvas );
+		signalBS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, Color.RED, canvas );
+		signalBL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalLS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, canvas );
-		signalLL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, canvas );
+		signalLS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, Color.GREEN, canvas );
+		signalLL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, Color.GREEN, canvas );
 		
-		signalRS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, canvas );
-		signalRL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, canvas );
+		signalRS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.GREEN, canvas );
+		signalRL = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, Color.GREEN, canvas );
 
 	}
 	
 	public void onMouseClick (Location point) {
 
 		if( laneTL.contains(point) ) {
-			new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas);
+			System.out.println("Car is pushed !");
+			carList.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
 		}
 		
 		else if( laneTM.contains(point) ) {
@@ -252,17 +257,14 @@ public class simulationController extends WindowController {
 		else if( laneRR.contains(point) ) {
 			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
 		}
-		
+
 		else if( signalTS.contains(point) ) {
-		
-			signalTS.changeSignal();
-	/*		if( signalTS.getSignal() == Color.GREEN ) {
-				signalTS.turnRed();
-			}
+
+			lightColor = signalTS.getSignal();
+			signalTS.remove();
+			signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, lightColor, canvas );
+
 			
-			else {
-				signalTS.turnGreen();
-			}*/
 		}
 		
 		else if( signalTL.contains(point) ) {

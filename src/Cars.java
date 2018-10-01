@@ -42,6 +42,7 @@ public class Cars extends ActiveObject {
 	private static int Y_MOVE = 5;
 	private static int DELAY_TIME = 30;
 	private DrawingCanvas canvas;
+	private static boolean beforeStopline = true;
 	Random random = new Random();
 	
 	public Cars (double x, double y, Lane whichLane, Signals signal, DrawingCanvas aCanvas) {
@@ -141,7 +142,7 @@ public class Cars extends ActiveObject {
 		
 	}
 	
-	public void removeFromCanvas() {
+	public void remove() {
 		
 		body.removeFromCanvas();
 		windshield.removeFromCanvas();
@@ -150,6 +151,9 @@ public class Cars extends ActiveObject {
 		
 	}
 	
+	public void setSignal( Signals sig ) {
+		laneSignal = sig;
+	}
 	public void run() {
 		
 	/*	while(body.getX() > 0) {
@@ -165,6 +169,13 @@ public class Cars extends ActiveObject {
 		} */
 		
 		while( true ) {
+			
+			if( beforeStopline && simulationController.carList.isEmpty() == false ) {
+				System.out.println("Car is popped !");
+				simulationController.carList.removeFirst();
+				beforeStopline = false;
+			}
+
 		
 		//if(laneSignal.getSignal() == Color.GREEN) {
 			switch( direction ) {
@@ -173,8 +184,10 @@ public class Cars extends ActiveObject {
 				
 				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
+
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
+
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
 				} else {
@@ -320,18 +333,19 @@ public class Cars extends ActiveObject {
 				
 				
 			}
+			
+			
 	
 			pause(DELAY_TIME);
 			
 			if( (body.getX() + body.getWidth() < 0 || body.getX() > canvas.getWidth()) ||
 					(body.getY() + body.getHeight() < 0 || body.getY() > canvas.getHeight()) ) {
 			
-				removeFromCanvas();
+				remove();
 				
 				break;
 			}
 		}
-
 	}
 	
 	// To create another car when this car is clicked in a lane
