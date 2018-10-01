@@ -10,7 +10,8 @@ public class Signals extends ActiveObject {
 	private static final int BOTTOM_ANGLE = 20;
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
-	private static boolean leftTurn;
+	private static boolean leftTurn = false;
+	private volatile boolean signalSwitch = false;
 	
 	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
@@ -73,6 +74,14 @@ public class Signals extends ActiveObject {
 		else return green;
 	}
 	
+	public void changeSignal() {
+		if( signalSwitch == false ) 
+			signalSwitch = true;
+		
+		else
+			signalSwitch = false;
+	}
+	
 	public void turnGreen() {
 
 		yellowLight.setColor(defaultLightColor);
@@ -93,21 +102,21 @@ public class Signals extends ActiveObject {
 	
 	public void run() {
 		
-		while(true) {
+		while( signalSwitch ) {
+				System.out.println("Hello");
+			turnYellow();
+			pause(2000);
 
 			if( getSignal() == green ) {
-				turnYellow();
-				pause(2000);
 				turnRed();
 			}
 			else {
-				turnYellow();
-				pause(2000);
 				turnGreen();
 			}
-			
+			signalSwitch = false;
 			pause (2000);
-		}
-		
+		}	
+		System.out.println("end");
+
 	}
 }

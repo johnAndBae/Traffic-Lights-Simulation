@@ -173,7 +173,7 @@ public class Cars extends ActiveObject {
 				
 				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
-				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
@@ -191,7 +191,7 @@ public class Cars extends ActiveObject {
 					move( 0, Y_MOVE );
 
 				} 
-				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
 				}  
 				else if (laneSignal.getSignal() == Color.GREEN){
@@ -208,7 +208,7 @@ public class Cars extends ActiveObject {
 					move( 0, Y_MOVE );
 
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
@@ -222,7 +222,7 @@ public class Cars extends ActiveObject {
 				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() < simulationController.beforeStopLineB) {
+				else if (laneSignal.getSignal() == Color.RED && body.getY() <= simulationController.beforeStopLineB) {
 					move (0, - Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, - Y_MOVE);
@@ -236,7 +236,7 @@ public class Cars extends ActiveObject {
 				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() < simulationController.beforeStopLineB) {
+				else if (laneSignal.getSignal() == Color.RED && body.getY() <= simulationController.beforeStopLineB) {
 					move (0, - Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, - Y_MOVE);
@@ -250,7 +250,7 @@ public class Cars extends ActiveObject {
 				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() < simulationController.beforeStopLineB) {
+				else if (laneSignal.getSignal() == Color.RED && body.getY() <= simulationController.beforeStopLineB) {
 					move (0, - Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(0, - Y_MOVE);
@@ -264,7 +264,7 @@ public class Cars extends ActiveObject {
 				if( body.getX() + CAR_LENGTH < simulationController.beforeStopLineL - STOP_OFFSET ) {
 					move( Y_MOVE, 0);
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getX() + CAR_LENGTH > simulationController.beforeStopLineL) {
+				else if (laneSignal.getSignal() == Color.RED && body.getX() + CAR_LENGTH >= simulationController.beforeStopLineL) {
 					move (Y_MOVE, 0);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(Y_MOVE, 0);
@@ -276,10 +276,10 @@ public class Cars extends ActiveObject {
 				break;
 				
 			case LR:
-				if( body.getX() < simulationController.beforeStopLineL - STOP_OFFSET ) {
+				if( body.getX() + CAR_LENGTH < simulationController.beforeStopLineL - STOP_OFFSET ) {
 					move( Y_MOVE, 0);
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getX() + CAR_WIDTH > simulationController.beforeStopLineL) {
+				else if (laneSignal.getSignal() == Color.RED && body.getX() + CAR_WIDTH >= simulationController.beforeStopLineL) {
 					move (Y_MOVE, 0);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
 					move(Y_MOVE, 0);
@@ -304,10 +304,10 @@ public class Cars extends ActiveObject {
 				break;
 				
 			case RR:
-				if( body.getX() < simulationController.beforeStopLineR + STOP_OFFSET ) {
+				if( body.getX() > simulationController.beforeStopLineR + STOP_OFFSET ) {
 					move(- Y_MOVE, 0);
 				}
-				else if (laneSignal.getSignal() == Color.RED && body.getX() > simulationController.beforeStopLineR + STOP_OFFSET) {
+				else if (laneSignal.getSignal() == Color.RED && body.getX() <= simulationController.beforeStopLineR) {
 					move (- Y_MOVE, 0);
 				}  
 				else if (laneSignal.getSignal() == Color.GREEN){

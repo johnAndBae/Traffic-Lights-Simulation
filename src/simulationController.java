@@ -213,17 +213,6 @@ public class simulationController extends WindowController {
 	
 	public void onMouseClick (Location point) {
 
-		if( signalTS.contains(point) ) {
-			
-			if( signalTS.getSignal() == Color.GREEN ) {
-				signalTS.turnRed();
-			}
-			
-			else {
-				signalTS.turnGreen();
-			}
-		}
-
 		if( laneTL.contains(point) ) {
 			new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas);
 		}
@@ -263,8 +252,98 @@ public class simulationController extends WindowController {
 		else if( laneRR.contains(point) ) {
 			new Cars( FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
 		}
+		
+		else if( signalTS.contains(point) ) {
+		
+			signalTS.changeSignal();
+	/*		if( signalTS.getSignal() == Color.GREEN ) {
+				signalTS.turnRed();
+			}
+			
+			else {
+				signalTS.turnGreen();
+			}*/
+		}
+		
+		else if( signalTL.contains(point) ) {
+			
+			if( signalTL.getSignal() == Color.GREEN ) {
+				signalTL.turnRed();
+			}
+			
+			else {
+				signalTL.turnGreen();
+			}
+		}
+		
+		else if( signalBS.contains(point) ) {
+			
+			if( signalBS.getSignal() == Color.GREEN ) {
+				signalBS.turnRed();
+			}
+			
+			else {
+				signalBS.turnGreen();
+			}
+		}
+		
+		else if( signalBL.contains(point) ) {
+			
+			if( signalBL.getSignal() == Color.GREEN ) {
+				signalBL.turnRed();
+			}
+			
+			else {
+				signalBL.turnGreen();
+			}
+		}
+		
+		else if( signalLS.contains(point) ) {
+			
+			if( signalLS.getSignal() == Color.GREEN ) {
+				signalLS.turnRed();
+			}
+			
+			else {
+				signalLS.turnGreen();
+			}
+		}
+		
+		
+		else if( signalLL.contains(point) ) {
+			
+			if( signalLL.getSignal() == Color.GREEN ) {
+				signalLL.turnRed();
+			}
+			
+			else {
+				signalLL.turnGreen();
+			}
+		}
+		
+		
+		else if( signalRS.contains(point) ) {
+			
+			if( signalRS.getSignal() == Color.GREEN ) {
+				signalRS.turnRed();
+			}
+			
+			else {
+				signalRS.turnGreen();
+			}
+		}
+		
+		else if( signalRL.contains(point) ) {
+			
+			if( signalRL.getSignal() == Color.GREEN ) {
+				signalRL.turnRed();
+			}
+			
+			else {
+				signalRL.turnGreen();
+			}
+		}
 	}
-	// Testing line, Remove this !!!
 	
 	
 	public static void main(String[] args) {
