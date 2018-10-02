@@ -152,18 +152,22 @@ public class Cars extends ActiveObject {
 	}
 	
 	public void popCar(LinkedList<Cars> laneList) {
-		if( beforeStopline && laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
+		if( laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
 			System.out.println("Car is popped !");
 			laneList.removeFirst();
 			beforeStopline = false;
-
 		}
 	}
+	
 	public void setSignal( Signals sig ) {
+		
+		System.out.println("New Signal !");
 		laneSignal = sig;
 	}
 
 	public void run() {
+		
+		System.out.println(simulationController.carListTL.toArray());
 		
 		while( true ) {
 
@@ -171,18 +175,32 @@ public class Cars extends ActiveObject {
 			
 			case TL:
 				
-				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
+				// We need to change the condition so that this car stops before any car in front
+				if( simulationController.carListTL.size() == 1 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
-
-				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT) {
+				} 
+				else if( simulationController.carListTL.size() == 2 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
+					move( 0, Y_MOVE );
+				} 
+				else if( simulationController.carListTL.size() == 3 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
+					move( 0, Y_MOVE );
+				} 
+				
+				// When car has passed the stop line
+				else if (body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
 					move(0, Y_MOVE);
+					
 					if(firstTime) {
-						beforeStopline = true;
 						firstTime = false;
 						popCar(simulationController.carListTL);
 					}
-				} else if (laneSignal.getSignal() == Color.GREEN && body.getY() + CAR_LENGTH > simulationController.beforeStopLineT){
+				} 
+				
+				// For the case where 
+				else if (laneSignal.getSignal() == Color.GREEN){
+					//System.out.println("Executed?");
 					move(0, Y_MOVE);
+
 					if(firstTime) {
 						beforeStopline = true;
 						firstTime = false;
@@ -196,6 +214,7 @@ public class Cars extends ActiveObject {
 					break;
 					
 				}
+			
 				
 				break; 
 			/* START HERE */
@@ -329,8 +348,6 @@ public class Cars extends ActiveObject {
 				}
 					
 				break;
-				
-				
 			}
 			
 			
