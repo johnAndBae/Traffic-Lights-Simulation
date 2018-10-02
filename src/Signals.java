@@ -88,6 +88,7 @@ public class Signals extends ActiveObject {
 
 	public void turnGreen() {
 
+		redLight.setColor(defaultLightColor);
 		yellowLight.setColor(defaultLightColor);
 		greenLight.setColor(green);
 	}
@@ -112,8 +113,7 @@ public class Signals extends ActiveObject {
 			turnRed();
 		}
 		else {
-			turnYellow();
-			pause(2000);
+		//	pause(2000);
 			turnGreen();
 		}
 		

@@ -233,6 +233,8 @@ public class simulationController extends WindowController {
 	
 	public void onMouseClick (Location point) {
 
+		int index = 0;
+		
 		if( laneTL.contains(point) ) {
 			System.out.println("Car is pushed !");
 			carListTL.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
@@ -288,27 +290,40 @@ public class simulationController extends WindowController {
 			lightColor = signalTS.getSignal();
 			signalTS.remove();
 			signalTS = new Signals( GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, lightColor, canvas );
+			
+			// Notify the change of signal to all cars waiting in each line.
+			for( index = 0; index < carListTM.size(); index++ ) {
+				carListTM.get(index).setSignal(signalTS);
+			}
+			for( index = 0; index < carListTR.size(); index++ ) {
+				carListTR.get(index).setSignal(signalTS);
+			}
 		}
 		
 		else if( signalTL.contains(point) ) {
 			
-			if( signalTL.getSignal() == Color.GREEN ) {
-				signalTL.turnRed();
-			}
+			lightColor = signalTL.getSignal();
+			signalTL.remove();
+			signalTL = new Signals( GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, lightColor, canvas );
 			
-			else {
-				signalTL.turnGreen();
+
+			for( index = 0; index < carListTL.size(); index++ ) {
+				carListTL.get(index).setSignal(signalTL);
 			}
 		}
+
 		
 		else if( signalBS.contains(point) ) {
+	
+			lightColor = signalBS.getSignal();
+			signalBS.remove();
+			signalBS = new Signals( GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, lightColor, canvas );
 			
-			if( signalBS.getSignal() == Color.GREEN ) {
-				signalBS.turnRed();
+			for( index = 0; index < carListBM.size(); index++ ) {
+				carListBM.get(index).setSignal(signalBS);
 			}
-			
-			else {
-				signalBS.turnGreen();
+			for( index = 0; index < carListBR.size(); index++ ) {
+				carListBR.get(index).setSignal(signalBS);
 			}
 		}
 		
