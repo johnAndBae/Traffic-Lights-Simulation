@@ -39,7 +39,7 @@ public class simulationController extends WindowController {
 	private static final int BROKEN_LINE_LENGTH = (GRASS_X / 8) - 10;
 	private static final int BROKEN_LINE_OFFSET = (GRASS_X / 8) + 10;
 	private static final int BROKEN_LINE_DISTANCE = BROKEN_LINE_LENGTH + BROKEN_LINE_OFFSET;
-	
+
 	
 	private static final int LINE_WIDTH = 6;
 	private static final int LINE_OFFSET = LINE_WIDTH / 2;
@@ -142,7 +142,7 @@ public class simulationController extends WindowController {
 		laneBR = new FilledRect( GRASS_X + LANE_WIDTH * 4 + LINE_OFFSET, GRASS_Y + LINA_ST_WIDTH + STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, GRASS_Y - STOP_WIDTH, canvas );
 
 		laneLL = new FilledRect( 0, GRASS_Y + LANE_WIDTH + LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, canvas );
-		laneLR = new FilledRect( 0, GRASS_Y + LANE_WIDTH * 2+ LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, canvas );
+		laneLR = new FilledRect( 0, GRASS_Y + LANE_WIDTH * 2 + LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, canvas );
 
 		laneRL = new FilledRect( GRASS_X + MAIN_ST_WIDTH + STOP_WIDTH, GRASS_Y + LANE_WIDTH + LINE_OFFSET, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_WIDTH, canvas );
 		laneRR = new FilledRect( GRASS_X + MAIN_ST_WIDTH + STOP_WIDTH, GRASS_Y, GRASS_X - STOP_WIDTH, LANE_WIDTH - LINE_OFFSET, canvas );
@@ -242,7 +242,7 @@ public class simulationController extends WindowController {
 		
 		else if( laneTM.contains(point) ) {
 			System.out.println("Car is pushed !");
-			carListTM.add(new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TM, signalTS, canvas));
+			carListTM.add(new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH , Lane.TM, signalTS, canvas));
 		}
 		
 		else if( laneTR.contains(point) ) {

@@ -185,11 +185,26 @@ public class Cars extends ActiveObject {
 				if( simulationController.carListTL.size() > 2 && simulationController.carListTL.get(2).equals(this) &&
 						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
 					move( 0, Y_MOVE );
-				} 
+				}
 
 				// When car has passed the stop line
 				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
-					move(0, Y_MOVE);
+					/*double temp = body.getWidth();
+					
+					
+					// 	GRASS_Y(150) + LANE_WIDTH(60) * 2 + LINE_OFFSET(3) + CAR_OFFSET(7)
+					if( body.getY() >= 280 ) {
+						body.setWidth(body.getHeight());
+						
+						body.setHeight(temp);
+						move( Y_MOVE, 0 );
+					}
+					else {
+						move(Y_MOVE * 2 / 3, Y_MOVE);
+					}
+					*/
+					move(Y_MOVE * 2 / 3, Y_MOVE);
+
 					
 					if(firstTime) {
 						firstTime = false;
@@ -224,6 +239,7 @@ public class Cars extends ActiveObject {
 				if( ! simulationController.carListTM.isEmpty() && simulationController.carListTM.get(0).equals(this) && 
 						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
+					//System.out.println("Hello!");
 				} 
 				if( simulationController.carListTM.size() > 1 && simulationController.carListTM.get(1).equals(this) && 
 						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
