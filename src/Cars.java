@@ -159,8 +159,7 @@ public class Cars extends ActiveObject {
 		}
 	}
 	
-	public void setSignal( Signals sig ) {
-		
+	public void setSignal( Signals sig ) {		
 		System.out.println("New Signal !");
 		laneSignal = sig;
 	}
@@ -174,20 +173,22 @@ public class Cars extends ActiveObject {
 			switch( direction ) {
 			
 			case TL:
-				
-				// We need to change the condition so that this car stops before any car in front
-				if( simulationController.carListTL.size() == 1 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
+
+				if( ! simulationController.carListTL.isEmpty() && simulationController.carListTL.get(0).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
 				} 
-				else if( simulationController.carListTL.size() == 2 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
+				if( simulationController.carListTL.size() > 1 && simulationController.carListTL.get(1).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
 					move( 0, Y_MOVE );
 				} 
-				else if( simulationController.carListTL.size() == 3 && body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
+				if( simulationController.carListTL.size() > 2 && simulationController.carListTL.get(2).equals(this) &&
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
 					move( 0, Y_MOVE );
 				} 
-				
+
 				// When car has passed the stop line
-				else if (body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
+				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
 					move(0, Y_MOVE);
 					
 					if(firstTime) {
@@ -196,9 +197,9 @@ public class Cars extends ActiveObject {
 					}
 				} 
 				
-				// For the case where 
-				else if (laneSignal.getSignal() == Color.GREEN){
-					//System.out.println("Executed?");
+				// Only the car that is at the very front of the lane is allowed to go when it's green
+				else if (body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT - STOP_OFFSET && 
+						laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
 
 					if(firstTime) {
@@ -217,52 +218,107 @@ public class Cars extends ActiveObject {
 			
 				
 				break; 
-			/* START HERE */
+				
 			case TM:
-				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
+				
+				if( ! simulationController.carListTM.isEmpty() && simulationController.carListTM.get(0).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
 				} 
-				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
-					move (0, Y_MOVE);
-				}  
-				else if (laneSignal.getSignal() == Color.GREEN){
+				if( simulationController.carListTM.size() > 1 && simulationController.carListTM.get(1).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
+					move( 0, Y_MOVE );
+				} 
+				if( simulationController.carListTM.size() > 2 && simulationController.carListTM.get(2).equals(this) &&
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
+					move( 0, Y_MOVE );
+				} 
+
+				// When car has passed the stop line
+				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
+					move(0, Y_MOVE);
+					
+					if(firstTime) {
+						firstTime = false;
+						popCar(simulationController.carListTM);
+					}
+				} 
+				
+				// Only the car that is at the very front of the lane is allowed to go when it's green
+				else if (body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT - STOP_OFFSET && 
+						laneSignal.getSignal() == Color.GREEN){
 					move(0, Y_MOVE);
 				} 
-				else {
-					break;
-				}	
+				
 				break;
 				
 			case TR:
-				if( body.getY() + CAR_LENGTH < simulationController.beforeStopLineT - STOP_OFFSET ) {
-					
+				
+				if( ! simulationController.carListTR.isEmpty() && simulationController.carListTR.get(0).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
 					move( 0, Y_MOVE );
+				} 
+				if( simulationController.carListTR.size() > 1 && simulationController.carListTR.get(1).equals(this) && 
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
+					move( 0, Y_MOVE );
+				} 
+				if( simulationController.carListTR.size() > 2 && simulationController.carListTR.get(2).equals(this) &&
+						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
+					move( 0, Y_MOVE );
+				} 
 
-				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
-					move (0, Y_MOVE);
-				}  else if (laneSignal.getSignal() == Color.GREEN){
+				// When car has passed the stop line
+				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
 					move(0, Y_MOVE);
-				} else {
-					break;
 					
-				}	
+					if(firstTime) {
+						firstTime = false;
+						popCar(simulationController.carListTR);
+					}
+				} 
+				
+				// Only the car that is at the very front of the lane is allowed to go when it's green
+				else if (body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT - STOP_OFFSET && 
+						laneSignal.getSignal() == Color.GREEN){
+					move(0, Y_MOVE);
+				} 
+				
 				break;
 				//test
 			case BL:
-				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
+
+				if( ! simulationController.carListBL.isEmpty() && simulationController.carListBL.get(0).equals(this) && 
+						body.getY() >= simulationController.beforeStopLineT + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
-				}
-				else if (laneSignal.getSignal() == Color.RED && body.getY() <= simulationController.beforeStopLineB) {
-					move (0, - Y_MOVE);
-				}  else if (laneSignal.getSignal() == Color.GREEN){
+				} 
+				if( simulationController.carListBL.size() > 1 && simulationController.carListBL.get(1).equals(this) && 
+						body.getY() >= simulationController.beforeStopLineT + CAR_LENGTH + STOP_OFFSET * 2) {
+					move( 0, - Y_MOVE );
+				} 
+				if( simulationController.carListBL.size() > 2 && simulationController.carListBL.get(2).equals(this) &&
+						body.getY() >= simulationController.beforeStopLineT + CAR_LENGTH * 2 + STOP_OFFSET * 3) {
+					move( 0, - Y_MOVE );
+				} 
+
+				// When car has passed the stop line
+				if ( body.getY() < simulationController.beforeStopLineB ) {
 					move(0, - Y_MOVE);
-				} else {
-					break;
-				}
+					
+					if(firstTime) {
+						firstTime = false;
+						popCar(simulationController.carListBL);
+					}
+				} 
 				
-				break;
+				// Only the car that is at the very front of the lane is allowed to go when it's green
+				else if (body.getY() <= simulationController.beforeStopLineB + STOP_OFFSET && 
+						laneSignal.getSignal() == Color.GREEN){
+					move(0, - Y_MOVE);
+				} 
 				
+				break; 
+				
+				/* START HERE */
 			case BM:
 				if( body.getY() > simulationController.beforeStopLineB + STOP_OFFSET ) {
 					move( 0, - Y_MOVE );
@@ -348,7 +404,7 @@ public class Cars extends ActiveObject {
 				}
 					
 				break;
-			}
+			} // End of switch statement
 			
 			
 	
@@ -361,8 +417,8 @@ public class Cars extends ActiveObject {
 				
 				break;
 			}
-		}
-	}
+		} // End of while
+	} // End of run()
 	
 	// To create another car when this car is clicked in a lane
 	public boolean contains ( Location point ) {
