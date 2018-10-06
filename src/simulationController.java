@@ -236,32 +236,32 @@ public class simulationController extends WindowController {
 		int index = 0;
 		
 		if( laneTL.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("TL Car is pushed !");
 			carListTL.add(new Cars( laneTL.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TL, signalTL, canvas));
 		}
 		
 		else if( laneTM.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("TM Car is pushed !");
 			carListTM.add(new Cars( laneTM.getX() + CAR_OFFSET, - CAR_LENGTH , Lane.TM, signalTS, canvas));
 		}
 		
 		else if( laneTR.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("TR Car is pushed !");
 			carListTR.add(new Cars( laneTR.getX() + CAR_OFFSET, - CAR_LENGTH, Lane.TR, signalTS, canvas));
 		}
 		
 		else if( laneBL.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("BL Car is pushed !");
 			carListBL.add(new Cars( laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas));
 		}
 		
 		else if( laneBM.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("BM Car is pushed !");
 			carListBM.add(new Cars( laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas));
 		}
 		
 		else if( laneBR.contains(point) ) {
-			System.out.println("Car is pushed !");
+			System.out.println("BR Car is pushed !");
 			carListBR.add(new Cars( laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas));
 		}
 		

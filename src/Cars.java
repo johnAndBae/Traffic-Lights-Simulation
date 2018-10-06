@@ -4,6 +4,7 @@ import java.util.Random;
 import java.awt.*;
 
 public class Cars extends ActiveObject {
+	
 	private static final double CAR_LENGTH = 70;
 	private static final double CAR_WIDTH = 40;
 	private static final double CAR_ANGLE = 20;
@@ -29,9 +30,8 @@ public class Cars extends ActiveObject {
 	private FilledRoundedRect body, windshield, backWindshield, roof;
 	private Lane direction;
 	private Signals laneSignal;
-	private int signalTime;
-	private int linaStDistance = 210;
-	private int mainStDistance = 300;
+	private final int linaStDistance = 210;
+	private final int mainStDistance = 300;
 	private int distance;
 	private Color yellowCar = new Color(255, 217, 0);
 	private Color blueCar = new Color(7, 47, 122);
@@ -43,133 +43,306 @@ public class Cars extends ActiveObject {
 	private static int Y_MOVE = 5;
 	private static int DELAY_TIME = 30;
 	private DrawingCanvas canvas;
-	private boolean beforeStopline = false;
 	private boolean firstTime = true;
 	Random random = new Random();
+	private double carX;
+	private double carY;
+	private boolean verticalCar = false;
+	private boolean removed = false;
+	private final int GAP_SIZE = 15;
+	private static boolean firstCar = false;
+	private static boolean secondCar = false;
+	private static boolean thirdCar = false;
+	
+	private Iterator iterator;
 	
 	public Cars (double x, double y, Lane whichLane, Signals signal, DrawingCanvas aCanvas) {
 		canvas = aCanvas;
 		laneSignal = signal;
 		direction = whichLane;
+		carX = x;
+		carY = y;
 		
-		int color = random.nextInt(6);
-
-		if( whichLane == Lane.LL || whichLane == Lane.LR || whichLane == Lane.RL || whichLane == Lane.RR ) {
-	
-			body = new FilledRoundedRect(x, y, CAR_LENGTH, CAR_WIDTH, CAR_ANGLE, FRONT_ANGLE, canvas);
-			
-			if(whichLane == Lane.LL || whichLane == Lane.LR) {
-				windshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + WINDSHIELD_SIDE_OFFSET,
-						WINDSHIELD_LENGTH, WINDSHIELD_WIDTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
-				backWindshield = new FilledRoundedRect(x + BACKSHIELD_OFFSET, y + BACKSHIELD_SIDE_OFFSET,
-						BACKSHIELD_LENGTH, BACKSHIELD_WIDTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
-				roof = new FilledRoundedRect(x + ROOF_OFFSET, y + BACKSHIELD_SIDE_OFFSET, ROOF_LENGTH, ROOF_WIDTH,
-						ROOF_ANGLE, ROOF_ANGLE, canvas);
-				windshield.setColor(windshieldColor);
-				backWindshield.setColor(windshieldColor);
-			} else {
-				windshield = new FilledRoundedRect(x + BACKSHIELD_OFFSET, y + WINDSHIELD_SIDE_OFFSET,
-						WINDSHIELD_LENGTH, WINDSHIELD_WIDTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
-				backWindshield = new FilledRoundedRect(x + WINDSHIELD_OFFSET, y + BACKSHIELD_SIDE_OFFSET,
-						BACKSHIELD_LENGTH, BACKSHIELD_WIDTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
-				roof = new FilledRoundedRect(x + ROOF_OFFSET, y + BACKSHIELD_SIDE_OFFSET, ROOF_LENGTH, ROOF_WIDTH,
-						ROOF_ANGLE, ROOF_ANGLE, canvas);
-				windshield.setColor(windshieldColor);
-				backWindshield.setColor(windshieldColor);	
-			}
-			
-			distance = linaStDistance;
-			
-		}
-		else {
-			body = new FilledRoundedRect(x, y, CAR_WIDTH, CAR_LENGTH, FRONT_ANGLE, CAR_ANGLE, canvas);
-			//to fix: the windshields
-			if(whichLane == Lane.BL || whichLane == Lane.BM || whichLane == Lane.BR) {
-				windshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
-						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
-				backWindshield = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + WINDSHIELD_OFFSET,
-						BACKSHIELD_WIDTH, BACKSHIELD_LENGTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
-				roof = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + ROOF_OFFSET, ROOF_WIDTH, ROOF_LENGTH,
-						ROOF_ANGLE, ROOF_ANGLE, canvas);
-				windshield.setColor(windshieldColor);
-				backWindshield.setColor(windshieldColor);
-				
-			} else {
-				//to fix: the windshields
-				backWindshield = new FilledRoundedRect(x + WINDSHIELD_SIDE_OFFSET, y + BACKSHIELD_OFFSET,
-						WINDSHIELD_WIDTH, WINDSHIELD_LENGTH, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
-				windshield = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + WINDSHIELD_OFFSET,
-						BACKSHIELD_WIDTH, BACKSHIELD_LENGTH, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
-				roof = new FilledRoundedRect(x + BACKSHIELD_SIDE_OFFSET, y + ROOF_OFFSET, ROOF_WIDTH, ROOF_LENGTH,
-						ROOF_ANGLE, ROOF_ANGLE, canvas);
-				windshield.setColor(windshieldColor);
-				backWindshield.setColor(windshieldColor);	
-			}
-		
-			distance = mainStDistance;
-		}
-		
-		if(color == 0) {
-			body.setColor(blueCar);
-			roof.setColor(blueCar);
-		} else if (color == 1) {
-			body.setColor(redCar);
-			roof.setColor(redCar);
-		} else if (color == 2){
-			body.setColor(yellowCar);
-			roof.setColor(yellowCar);
-		} else if (color == 3){
-			body.setColor(purpleCar);
-			roof.setColor(purpleCar);
-		} else if (color == 4){
-			body.setColor(cyanCar);
-			roof.setColor(cyanCar);
+		if(whichLane == Lane.LL || whichLane == Lane.LR) {
+			constructCar(WINDSHIELD_OFFSET, WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET,
+						ROOF_OFFSET, BACKSHIELD_SIDE_OFFSET);
+		} else if (whichLane == Lane.RL || whichLane == Lane.RR) {
+				constructCar(BACKSHIELD_OFFSET, WINDSHIELD_SIDE_OFFSET, WINDSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET,
+						ROOF_OFFSET, BACKSHIELD_SIDE_OFFSET);
+		} else if (whichLane == Lane.BL || whichLane == Lane.BR || whichLane == Lane.BM){
+			verticalCar = true;
+			constructCar(WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET, WINDSHIELD_OFFSET,
+					BACKSHIELD_SIDE_OFFSET, ROOF_OFFSET);	
 		} else {
-			body.setColor(orangeCar);
-			roof.setColor(orangeCar);
+			verticalCar = true;
+			constructCar(WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET, WINDSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET, ROOF_OFFSET);
 		}
 		
+		setCarColor();
+
 		start();
 	}	
 	
+	public void constructCar(double windshieldX, double windshieldY, double backshieldX, double backshieldY, double roofX, double roofY) {
+		double carSizeX, carSizeY;
+		double angleX, angleY;
+		
+		if(!verticalCar) {
+			carSizeX = CAR_LENGTH;
+			carSizeY = CAR_WIDTH;
+			angleX = CAR_ANGLE;
+			angleY = FRONT_ANGLE;
+		} else {
+			carSizeX = CAR_WIDTH; //40
+			carSizeY = CAR_LENGTH; //70
+			angleX = FRONT_ANGLE;
+			angleY = CAR_ANGLE;
+		}
+		
+		body = new FilledRoundedRect(carX, carY, carSizeX, carSizeY, angleX, angleY, canvas);
+		constructWindshield(windshieldX, windshieldY);
+		constructBackWindshield(backshieldX, backshieldY);
+		constructRoof(roofX, roofY);
+			
+	}
+	
+	public void constructWindshield(double xOffset, double yOffset) {
+		double windshieldX = carX + xOffset;
+		double windshieldY = carY + yOffset;
+		
+		double width, length;
+		
+		if(!verticalCar) {
+			width = WINDSHIELD_LENGTH;
+			length = WINDSHIELD_WIDTH;
+		} else {
+			width = WINDSHIELD_WIDTH;
+			length = WINDSHIELD_LENGTH;
+		}
+		windshield = new FilledRoundedRect(windshieldX, windshieldY, width, length, WINDSHIELD_ANGLE, WINDSHIELD_ANGLE, canvas);
+		
+	}
+
+	public void constructBackWindshield(double xOffset, double yOffset) {
+		double backwindshieldX = carX + xOffset;
+		double backwindshieldY = carY + yOffset;
+		double width, length;
+		
+		if(verticalCar) {
+			width = BACKSHIELD_WIDTH;
+			length = BACKSHIELD_LENGTH;
+		} else {
+			width = BACKSHIELD_LENGTH;
+			length = BACKSHIELD_WIDTH;
+		}
+		backWindshield = new FilledRoundedRect(backwindshieldX, backwindshieldY, width, length, BACKSHIELD_CURVE_ANGLE, BACKSHIELD_ANGLE, canvas);
+
+	}
+	
+	public void constructRoof(double xOffset, double yOffset) {
+		double roofX = carX + xOffset;
+		double roofY = carY + yOffset;
+		double width, length;
+		
+		if(verticalCar) {
+			width = ROOF_WIDTH;
+			length = ROOF_LENGTH;
+		} else {
+			width = ROOF_LENGTH;
+			length = ROOF_WIDTH;
+		}
+		roof = new FilledRoundedRect(roofX, roofY, width, length, ROOF_ANGLE, ROOF_ANGLE, canvas);	
+	}
+	
+	/*************************************************************************** 
+	 * setCarColor(int color)
+	 * Sets the color of the car.
+	 **************************************************************************/
+	
+	public void setCarColor() {
+		
+		int color = random.nextInt(6);
+		
+		windshield.setColor(windshieldColor);
+		backWindshield.setColor(windshieldColor);
+		
+		switch(color) {
+		case 0:
+			body.setColor(blueCar);
+			roof.setColor(blueCar);
+			break;
+		case 1:
+			body.setColor(redCar);
+			roof.setColor(redCar);
+			break;
+		case 2:
+			body.setColor(yellowCar);
+			roof.setColor(yellowCar);
+			break;
+		case 3:
+			body.setColor(purpleCar);
+			roof.setColor(purpleCar);
+			break;
+		case 4:
+			body.setColor(cyanCar);
+			roof.setColor(cyanCar);
+			break;
+		default:
+			body.setColor(orangeCar);
+			roof.setColor(orangeCar);
+			break;
+		}
+		
+	}
+	
 	// To implement the car's movements.
 	public void move ( double x, double y ) {
-		
 		body.move(x, y);
 		windshield.move(x, y);
 		backWindshield.move(x, y);
 		roof.move(x, y);
-		
 	}
 	
+	// Removes the car from the canvas
 	public void remove() {
-		
 		body.removeFromCanvas();
 		windshield.removeFromCanvas();
 		backWindshield.removeFromCanvas();
 		roof.removeFromCanvas();
-		
 	}
 	
+	// Removes the car from the list
 	public void popCar(LinkedList<Cars> laneList) {
-		if( laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
-			System.out.println("Car is popped !");
-			laneList.removeFirst();
-			beforeStopline = false;
+		if(firstTime) {
+			firstTime = false;
+			if( laneList.isEmpty() == false && laneSignal.getSignal() == Color.GREEN) {
+				System.out.println("Car is popped !");
+				laneList.removeFirst();
+				removed = true;
+			}
 		}
 	}
 	
-	public void setSignal( Signals sig ) {		
-		System.out.println("New Signal !");
-		laneSignal = sig;
+	public void setLaneQueue(LinkedList<Cars> laneList, int stoplineDistance) {
+		
+	}
+	
+	public void runCarForward(LinkedList<Cars> laneList, int stoplineDistance, int x, int y) {
+		
+	
+		double carPosition;
+		boolean secondPosition;
+		boolean thirdPosition;
+		//int laneListSize = laneList.size();
+		//Other concerns: if you click TOO fast, then the car will be produced
+		// of course, the second car will stop FIRST before the first car, which will cause
+		// an overlap ISSUE
+		// the problem with working with junhee's hardcoded is that it will ALWAYS stop there
+		// before continuing.
+		// I need a DELAY between the cars, how can i achieve a delay?
+		if(verticalCar) {
+			carPosition = body.getY() + CAR_LENGTH;
+		} else {
+			carPosition = body.getX() + CAR_LENGTH;
+		}
+		
+		if(laneSignal.getSignal() == Color.GREEN) {
+			move(x,y);
+		}
+		
+		if(carPosition <= stoplineDistance) {
+			move(x, y);
+		}
+		
+		// When car has passed the stop line, it will continue moving
+		if ( carPosition > stoplineDistance ) {
+			move( x, y );
+			popCar(laneList);
+	
+		// Only the car that is at the very front of the lane is allowed to go when it's green
+		} else if (body.getY() + CAR_LENGTH >= stoplineDistance - STOP_OFFSET && 
+				laneSignal.getSignal() == Color.GREEN){
+			move( x, y );
+		}
+		
+	//	if(laneSignal.getSignal() == Color.RED && carPosition <= stoplineDistance) {	
+			if( ! laneList.isEmpty() && laneList.get(0).equals(this) && 
+					body.getY() + CAR_LENGTH <= stoplineDistance - STOP_OFFSET ) {
+				move( x, y); //* 2
+ 				// the default of this will mean that the car will stop once it reaches the distance
+			} else {
+				firstCar = true;
+			}
+			
+			if(laneList.size() > 1 && laneList.get(1).equals(this) && 
+					carPosition <= stoplineDistance - CAR_LENGTH - STOP_OFFSET * 2) {
+				move( x, y );
+			}
+			
+			if( laneList.size() > 2 && laneList.get(2).equals(this) &&
+				carPosition <= stoplineDistance - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
+				move( x, y );
+			}
+			else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
+				move (0, Y_MOVE);
+			} else if (laneSignal.getSignal() == Color.GREEN){
+				move(0, Y_MOVE);
+			} 
+	
+			
+			/* IF MORE THAN 3 CARS IN THE LIST, it will iterate through each element,
+			 * and give a delay so it will time itself so it won't overlap
+			 * note: if the user clicks TOO fast, then it might throw an issue
+			 * ^^ can be resolved by limiting the user clicking.
+			 */
+			
+			if(laneList.size() > 3) {
+				iterator = laneList.listIterator(3);
+				for(int i = 2; i < laneList.size() - 1; i++) {
+					while(iterator.hasNext() && laneList.get(i).equals(this)) {
+						pause(200 * i);
+					} // end of while loop
+				} // end of for loop
+		//	} // end of if statement
+
+		}
+			
+		
+	}
+	
+	public void runCarLeft(LinkedList<Cars> laneList, int stoplineDistance, int x, int y) {
+		
+		
+	}
+	
+	public double distanceTraveled() {
+		if(verticalCar) {
+			return (distance - body.getY());
+		} 
+		
+		return (distance - body.getX());
+	}
+	
+	// Check distance between the car and the next car
+	private boolean checkCarGap(Cars car, int gap) {
+		return distanceTraveled() < gap + body.getHeight();
+	}
+	
+	// Forces the car to delay
+	private void waitCar(Cars car) {
+		while (checkCarGap(car, GAP_SIZE)){
+			pause(GAP_SIZE);
+		}
+	}
+	
+	public void setSignal( Signals newSignal ) {		
+		laneSignal = newSignal;
 	}
 
 	public void run() {
 		
-		System.out.println(simulationController.carListTL.toArray());
-		
 		while( true ) {
-
+			
 			switch( direction ) {
 			
 			case TL:
@@ -189,6 +362,7 @@ public class Cars extends ActiveObject {
 
 				// When car has passed the stop line
 				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
+					
 					/*double temp = body.getWidth();
 					
 					
@@ -203,6 +377,7 @@ public class Cars extends ActiveObject {
 						move(Y_MOVE * 2 / 3, Y_MOVE);
 					}
 					*/
+					
 					move(Y_MOVE * 2 / 3, Y_MOVE);
 
 					
@@ -218,10 +393,10 @@ public class Cars extends ActiveObject {
 					move(0, Y_MOVE);
 
 					if(firstTime) {
-						beforeStopline = true;
 						firstTime = false;
 						popCar(simulationController.carListTL);					
 					}
+					
 				} else if (laneSignal.getSignal() == Color.RED && body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT) {
 					move (0, Y_MOVE);
 				}  else if (laneSignal.getSignal() == Color.GREEN){
@@ -236,68 +411,13 @@ public class Cars extends ActiveObject {
 				
 			case TM:
 				
-				if( ! simulationController.carListTM.isEmpty() && simulationController.carListTM.get(0).equals(this) && 
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
-					move( 0, Y_MOVE );
-					//System.out.println("Hello!");
-				} 
-				if( simulationController.carListTM.size() > 1 && simulationController.carListTM.get(1).equals(this) && 
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
-					move( 0, Y_MOVE );
-				} 
-				if( simulationController.carListTM.size() > 2 && simulationController.carListTM.get(2).equals(this) &&
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
-					move( 0, Y_MOVE );
-				} 
-
-				// When car has passed the stop line
-				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
-					move(0, Y_MOVE);
-					
-					if(firstTime) {
-						firstTime = false;
-						popCar(simulationController.carListTM);
-					}
-				} 
-				
-				// Only the car that is at the very front of the lane is allowed to go when it's green
-				else if (body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT - STOP_OFFSET && 
-						laneSignal.getSignal() == Color.GREEN){
-					move(0, Y_MOVE);
-				} 
+				runCarForward(simulationController.carListTM, simulationController.beforeStopLineT, 0, Y_MOVE);
 				
 				break;
 				
 			case TR:
 				
-				if( ! simulationController.carListTR.isEmpty() && simulationController.carListTR.get(0).equals(this) && 
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - STOP_OFFSET ) {
-					move( 0, Y_MOVE );
-				} 
-				if( simulationController.carListTR.size() > 1 && simulationController.carListTR.get(1).equals(this) && 
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH - STOP_OFFSET * 2) {
-					move( 0, Y_MOVE );
-				} 
-				if( simulationController.carListTR.size() > 2 && simulationController.carListTR.get(2).equals(this) &&
-						body.getY() + CAR_LENGTH <= simulationController.beforeStopLineT - CAR_LENGTH * 2 - STOP_OFFSET * 3) {
-					move( 0, Y_MOVE );
-				} 
-
-				// When car has passed the stop line
-				if ( body.getY() + CAR_LENGTH > simulationController.beforeStopLineT ) {
-					move(0, Y_MOVE);
-					
-					if(firstTime) {
-						firstTime = false;
-						popCar(simulationController.carListTR);
-					}
-				} 
-				
-				// Only the car that is at the very front of the lane is allowed to go when it's green
-				else if (body.getY() + CAR_LENGTH >= simulationController.beforeStopLineT - STOP_OFFSET && 
-						laneSignal.getSignal() == Color.GREEN){
-					move(0, Y_MOVE);
-				} 
+				runCarForward(simulationController.carListTR, simulationController.beforeStopLineT, 0, Y_MOVE);
 				
 				break;
 				//test
@@ -421,8 +541,6 @@ public class Cars extends ActiveObject {
 					
 				break;
 			} // End of switch statement
-			
-			
 	
 			pause(DELAY_TIME);
 			
@@ -434,6 +552,7 @@ public class Cars extends ActiveObject {
 				break;
 			}
 		} // End of while
+		
 	} // End of run()
 	
 	// To create another car when this car is clicked in a lane
