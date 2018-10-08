@@ -44,12 +44,11 @@ public class Car extends ActiveObject {
 	private static int Y_MOVE = 5;
 	private static int DELAY_TIME = 30;
 	private DrawingCanvas canvas;
-	private boolean firstTime = true;
 	Random random = new Random();
 	private double carX;
 	private double carY;
 	private boolean verticalCar = false;
-	private final int GAP_SIZE = 20;
+	private final int GAP_SIZE = 15;
 	private Location obstacle;
 	
 	private boolean moving;
@@ -191,7 +190,7 @@ public class Car extends ActiveObject {
 		windshield.move(x, y);
 		backWindshield.move(x, y);
 		roof.move(x, y);
-		carX = body.getLocation().getX();
+		carX = body.getLocation().getX(); // updates the car positions in the variable
 		carY = body.getLocation().getY();
 	}
 
@@ -210,7 +209,7 @@ public class Car extends ActiveObject {
 	public void runCar(int stoplineDistance, int x, int y) {
 		LinkedList<Car> lane = SimulationController.lanes.get(laneCode);
 		double carPosition;
-		double overlap = Double.MAX_VALUE;
+		double overlap = Double.MAX_VALUE; // maximum value a double can represent
 		
 		int index = lane.indexOf(this);
 		
@@ -224,7 +223,7 @@ public class Car extends ActiveObject {
 		// if this car overlaps with previous car, don't move 
 		if (index > 0) {
 			Car previous = lane.get(index - 1);
-			overlap = verticalCar ? previous.getLocation().getY() : previous.getLocation().getX();
+			overlap = verticalCar ? previous.getLocation().getY() - GAP_SIZE : previous.getLocation().getX() - GAP_SIZE;
 			if (carPosition > overlap) {
 				return;
 			}
@@ -236,6 +235,11 @@ public class Car extends ActiveObject {
 				removeThisFromLane(lane);
 			}
 		}
+	}
+	
+	private void leftTurn(int stoplineDistance, int x, int y) {
+		
+		
 	}
 
 	// Removes the car
@@ -290,13 +294,11 @@ public class Car extends ActiveObject {
 				runCar(SimulationController.beforeStopLineT, 0, Y_MOVE);
 				break;
 			case BL:
-
 				runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
 				break;
 
 			case BM:
 				runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
-
 				break;
 
 			case BR:
