@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Polygon;
 
 import objectdraw.*;
 
@@ -11,7 +12,7 @@ public class Signals extends ActiveObject {
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
 	private static boolean leftTurn = false;
-	
+
 	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
 
@@ -19,105 +20,120 @@ public class Signals extends ActiveObject {
 	private static Color red = Color.RED;
 	private static Color yellow = Color.YELLOW;
 	private static Color green = Color.GREEN;
-	
-	public Signals( double x, double y, boolean isLeftTurn, Color currentSignal, DrawingCanvas canvas ) {
-	
+
+	public Signals(double x, double y, boolean isLeftTurn, Color currentSignal, DrawingCanvas canvas) {
+
 		// Create the body of signal
-		signalBody = new FilledRoundedRect( x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE, canvas );
+		signalBody = new FilledRoundedRect(x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE,
+				canvas);
 		leftTurn = isLeftTurn;
 
-
 		// Need to draw arrows for left-turn signals
-		if ( isLeftTurn ) {
-			
-			redLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_OFFSET * 2, LIGHT_SIZE, LIGHT_SIZE, canvas );
-			yellowLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_SIZE + LIGHT_OFFSET * 3, LIGHT_SIZE, LIGHT_SIZE, canvas );
-			greenLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_SIZE * 2 + LIGHT_OFFSET * 4, LIGHT_SIZE, LIGHT_SIZE, canvas );
-		}
-		
-		else {
-			
-			redLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_OFFSET * 2, LIGHT_SIZE, LIGHT_SIZE, canvas );
-			yellowLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_SIZE + LIGHT_OFFSET * 3, LIGHT_SIZE, LIGHT_SIZE, canvas );
-			greenLight = new FilledOval( x + LIGHT_OFFSET, y + LIGHT_SIZE * 2 + LIGHT_OFFSET * 4, LIGHT_SIZE, LIGHT_SIZE, canvas );
+		if (isLeftTurn) {
+
+			redLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_OFFSET * 2, LIGHT_SIZE, LIGHT_SIZE, canvas);
+			yellowLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_SIZE + LIGHT_OFFSET * 3, LIGHT_SIZE, LIGHT_SIZE,
+					canvas);
+			greenLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_SIZE * 2 + LIGHT_OFFSET * 4, LIGHT_SIZE, LIGHT_SIZE,
+					canvas);
 		}
 
-		if( currentSignal == red ) {
-			redLight.setColor(red);
-			yellowLight.setColor(defaultLightColor);
-			greenLight.setColor(defaultLightColor);
-		}
-		
 		else {
-			redLight.setColor(defaultLightColor);
-			yellowLight.setColor(defaultLightColor);
-			greenLight.setColor(green);
+
+			redLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_OFFSET * 2, LIGHT_SIZE, LIGHT_SIZE, canvas);
+			yellowLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_SIZE + LIGHT_OFFSET * 3, LIGHT_SIZE, LIGHT_SIZE,
+					canvas);
+			greenLight = new FilledOval(x + LIGHT_OFFSET, y + LIGHT_SIZE * 2 + LIGHT_OFFSET * 4, LIGHT_SIZE, LIGHT_SIZE,
+					canvas);
 		}
-		
+
+		if (currentSignal == red) {
+			turnRed();
+		}
+
+		else {
+			turnGreen();
+		}
+
 		start();
 
 	}
-	
-	public boolean contains( Location point ) {
-		
-		if( signalBody.contains(point) || redLight.contains(point) || yellowLight.contains(point) || greenLight.contains(point) ) {
+
+	public double getStopLinePosition() {
+		return signalBody.getX() + SIGNAL_BODY_HEIGHT;
+	}
+
+	public boolean contains(Location point) {
+
+		if (signalBody.contains(point) || redLight.contains(point) || yellowLight.contains(point)
+				|| greenLight.contains(point)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public void remove() {
-		
+
 		signalBody.removeFromCanvas();
 		redLight.removeFromCanvas();
 		yellowLight.removeFromCanvas();
 		greenLight.removeFromCanvas();
 	}
-		
+
 	public Color getSignal() {
-		
-		if( redLight.getColor() == red ) {
+
+		if (redLight.getColor() == Color.RED) {
 			return red;
-		}
-		else if( yellowLight.getColor() == yellow ) {
+		} else if (yellowLight.getColor() == Color.YELLOW) {
 			return yellow;
-		}
-		else return green;
+		} else
+			return green;
 	}
 
 	public void turnGreen() {
-
 		redLight.setColor(defaultLightColor);
 		yellowLight.setColor(defaultLightColor);
-		greenLight.setColor(green);
+		greenLight.setColor(Color.GREEN);
 	}
 
 	public void turnYellow() {
-		
 		redLight.setColor(defaultLightColor);
 		greenLight.setColor(defaultLightColor);
-		yellowLight.setColor(yellow);
+		yellowLight.setColor(Color.YELLOW);
 	}
+
 	public void turnRed() {
-		
+		greenLight.setColor(defaultLightColor);
 		yellowLight.setColor(defaultLightColor);
-		redLight.setColor(red);
+		redLight.setColor(Color.RED);
 	}
 	
-	public void run() {
-		
-		if( getSignal() == green ) {
+	public void change() {
+		if (getSignal() == Color.GREEN) {
 			turnYellow();
-			pause(2000);
+		} else if (getSignal() == Color.YELLOW) {
 			turnRed();
-		}
-		else {
-		//	pause(2000);
+		} else {
 			turnGreen();
 		}
-		
-		pause (2000);
-	
+	}
+
+	public void run() {
+		while (true) {
+			if (getSignal() == Color.GREEN) {
+				turnYellow();
+				pause(1000);
+			} else if (getSignal() == Color.YELLOW) {
+				turnRed();
+				pause(4500);
+			} else {
+				pause(800);
+				turnGreen();
+				pause(4200);
+			}
+		}
+
 	}
 }
+
