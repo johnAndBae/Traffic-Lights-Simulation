@@ -48,6 +48,7 @@ public class Car extends ActiveObject {
 	private double carX;
 	private double carY;
 	private boolean verticalCar = false;
+	private boolean reverseCar = false;
 	private final int GAP_SIZE = 15;
 	private Location obstacle;
 	
@@ -64,10 +65,13 @@ public class Car extends ActiveObject {
 			constructCar(WINDSHIELD_OFFSET, WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET,
 					ROOF_OFFSET, BACKSHIELD_SIDE_OFFSET);
 		} else if (whichLane == Lane.RL || whichLane == Lane.RR) {
+			reverseCar = true;
+			System.out.println(reverseCar);
 			constructCar(BACKSHIELD_OFFSET, WINDSHIELD_SIDE_OFFSET, WINDSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET,
 					ROOF_OFFSET, BACKSHIELD_SIDE_OFFSET);
 		} else if (whichLane == Lane.BL || whichLane == Lane.BR || whichLane == Lane.BM) {
 			verticalCar = true;
+			reverseCar = true;
 			constructCar(WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET, WINDSHIELD_OFFSET,
 					BACKSHIELD_SIDE_OFFSET, ROOF_OFFSET);
 		} else {
@@ -104,7 +108,7 @@ public class Car extends ActiveObject {
 		constructRoof(roofX, roofY);
 
 	}
-
+	
 	public void constructWindshield(double xOffset, double yOffset) {
 		double windshieldX = carX + xOffset;
 		double windshieldY = carY + yOffset;
@@ -210,30 +214,56 @@ public class Car extends ActiveObject {
 		LinkedList<Car> lane = SimulationController.lanes.get(laneCode);
 		double carPosition;
 		double overlap = Double.MAX_VALUE; // maximum value a double can represent
+		double boundary;
 		
-		int index = lane.indexOf(this);
+		int index = lane.indexOf(this); // retrieves the lane
+		System.out.println("The laneCode is : " + laneCode + " and the lane index is at : " + index);
 		
 		if (verticalCar) {
 			carPosition = body.getY() + CAR_LENGTH;
 		} else {
 			carPosition = body.getX() + CAR_LENGTH;
 		}
-		double boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
-
+		
+			
 		// if this car overlaps with previous car, don't move 
 		if (index > 0) {
+			if(!reverseCar) {
+			System.out.println("Entered bruhh");
 			Car previous = lane.get(index - 1);
 			overlap = verticalCar ? previous.getLocation().getY() - GAP_SIZE : previous.getLocation().getX() - GAP_SIZE;
 			if (carPosition > overlap) {
 				return;
 			}
+			} else {
+			System.out.println("Entered dude");
+		    Car previous = lane.get(index - 1);
+		    overlap = verticalCar ? previous.getLocation().getY() + CAR_LENGTH + CAR_LENGTH + GAP_SIZE : previous.getLocation().getX() + CAR_LENGTH + CAR_LENGTH + GAP_SIZE;
+		    if (carPosition < overlap) {
+		    	return;
+		    }
+		}
 		}
 
-		if (laneSignal.getSignal() == Color.GREEN || carPosition < boundary || carPosition > stoplineDistance) {
-			move(x, y);
-			if (carPosition > stoplineDistance) {
-				removeThisFromLane(lane);
-			}
+
+		if(!reverseCar) {
+			boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
+			System.out.println("The boundary is " + boundary);
+			if (laneSignal.getSignal() == Color.GREEN || carPosition < boundary || carPosition > stoplineDistance) {
+				move(x, y);
+				if (carPosition > stoplineDistance) {
+					removeThisFromLane(lane); // pushes the car out
+				}
+		}
+		}else {
+			boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
+			System.out.println("The boundary is " + boundary);
+			if (laneSignal.getSignal() == Color.GREEN || carPosition < boundary || carPosition < stoplineDistance) {
+				move(x, y);
+				if (carPosition < stoplineDistance) {
+					removeThisFromLane(lane); // pushes the car out
+				}
+		}
 		}
 	}
 	
@@ -246,6 +276,7 @@ public class Car extends ActiveObject {
 	private void removeThisFromLane(LinkedList<Car> queue) {
 		if (queue.contains(this)) {
 			queue.remove(this);
+			System.out.println("Succesfully removed");
 		}
 	}
 
@@ -260,8 +291,6 @@ public class Car extends ActiveObject {
 			switch (laneCode) {
 
 			case TL:
-
-	
 
 				// When car has passed the stop line
 				if (body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT) {
@@ -303,29 +332,22 @@ public class Car extends ActiveObject {
 
 			case BR:
 				runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
-
 				break;
 
 			case LL:
 				runCar(SimulationController.beforeStopLineL, Y_MOVE, 0);
-
 				break;
 
 			case LR:
 				runCar(SimulationController.beforeStopLineL, Y_MOVE, 0);
-
-
 				break;
 
 			case RL:
 				runCar(SimulationController.beforeStopLineR, - Y_MOVE, 0);
-
-
 				break;
 
 			case RR:
 				runCar(SimulationController.beforeStopLineR, - Y_MOVE, 0);
-				
 				break;
 			} // End of switch statement
 
