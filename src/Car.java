@@ -3,10 +3,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
-import objectdraw.ActiveObject;
-import objectdraw.DrawingCanvas;
-import objectdraw.FilledRoundedRect;
-import objectdraw.Location;
+import objectdraw.*;
 
 public class Car extends ActiveObject {
 
@@ -237,9 +234,74 @@ public class Car extends ActiveObject {
 		}
 	}
 	
+	/*************************** Double check the parameters !! Some are not used ! ***************************/
 	private void leftTurn(int stoplineDistance, int x, int y) {
+		LinkedList<Car> lane = SimulationController.lanes.get(laneCode);
+
+		// When car has passed the stop line
+		if ( body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT && 
+				body.getY() < y ) {
+			
+			move(Y_MOVE * 2 / 3, Y_MOVE);
+			if (body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT) {
+				removeThisFromLane(lane);
+			}
+		} else if( body.getY() >= y ) {
+			if( verticalCar ) {
+				rotateCar();
+			}
+			move(Y_MOVE, 0);
+		}
+	}
+	/********************************* John ! You start working from here !! **********************************/
+	private void rotateCar() {
+		
+		double temp;
+		/*constructCar(WINDSHIELD_OFFSET, WINDSHIELD_SIDE_OFFSET, BACKSHIELD_OFFSET, BACKSHIELD_SIDE_OFFSET,
+				ROOF_OFFSET, BACKSHIELD_SIDE_OFFSET);*/
+		// Resetting body
+		temp = body.getHeight();
+		body.setHeight(body.getWidth());
+		body.setWidth(temp);
+		
+		temp = body.getArcHeight();
+		body.setArcHeight(body.getArcWidth());
+		body.setArcWidth(temp);
 		
 		
+		// Resetting windshield
+		temp = windshield.getHeight();
+		windshield.setHeight(windshield.getWidth());
+		windshield.setWidth(temp);
+		
+		temp = windshield.getArcHeight();
+		windshield.setArcHeight(windshield.getArcWidth());
+		windshield.setArcWidth(temp);
+		windshield.move(WINDSHIELD_OFFSET, - WINDSHIELD_SIDE_OFFSET - 5);
+		
+		
+		// Resetting backWindshield
+		temp = backWindshield.getHeight();
+		backWindshield.setHeight(backWindshield.getWidth());
+		backWindshield.setWidth(temp);
+		backWindshield.move(5, 5 - WINDSHIELD_OFFSET);
+
+		temp = backWindshield.getArcHeight();
+		backWindshield.setArcHeight(backWindshield.getArcWidth());
+		backWindshield.setArcWidth(temp);
+		
+		
+		// Resetting roof
+		temp = roof.getHeight();
+		roof.setHeight(roof.getWidth());
+		roof.setWidth(temp);
+		roof.move(ROOF_OFFSET - 2, 5 - ROOF_OFFSET);
+
+		temp = roof.getArcHeight();
+		roof.setArcHeight(roof.getArcWidth());
+		roof.setArcWidth(temp);
+		
+		verticalCar = false;
 	}
 
 	// Removes the car
@@ -261,30 +323,11 @@ public class Car extends ActiveObject {
 
 			case TL:
 
-	
-
-				// When car has passed the stop line
-				if (body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT) {
-
-					/*
-					 * double temp = body.getWidth();
-					 * 
-					 * 
-					 * // GRASS_Y(150) + LANE_WIDTH(60) * 2 + LINE_OFFSET(3) +
-					 * CAR_OFFSET(7) if( body.getY() >= 280 ) {
-					 * body.setWidth(body.getHeight());
-					 * 
-					 * body.setHeight(temp); move( Y_MOVE, 0 ); } else {
-					 * move(Y_MOVE * 2 / 3, Y_MOVE); }
-					 */
-
-					move(Y_MOVE * 2 / 3, Y_MOVE);
-
+				if( body.getY() + CAR_LENGTH <= SimulationController.beforeStopLineT ) {
+					runCar(SimulationController.beforeStopLineT, 0, Y_MOVE);
+				} else {
+					leftTurn( SimulationController.beforeStopLineT, 0, SimulationController.LEFT_TURN_R );
 				}
-
-				// Only the car that is at the very front of the lane is allowed
-				// to go when it's green
-				
 				break;
 
 			case TM:
@@ -294,7 +337,11 @@ public class Car extends ActiveObject {
 				runCar(SimulationController.beforeStopLineT, 0, Y_MOVE);
 				break;
 			case BL:
-				runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
+				if( body.getY() - CAR_LENGTH > SimulationController.beforeStopLineB ) {
+					runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
+				} else {
+					leftTurn( SimulationController.beforeStopLineB, 0, SimulationController.LEFT_TURN_L );
+				}
 				break;
 
 			case BM:
@@ -303,29 +350,22 @@ public class Car extends ActiveObject {
 
 			case BR:
 				runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
-
 				break;
 
 			case LL:
 				runCar(SimulationController.beforeStopLineL, Y_MOVE, 0);
-
 				break;
 
 			case LR:
 				runCar(SimulationController.beforeStopLineL, Y_MOVE, 0);
-
-
 				break;
 
 			case RL:
 				runCar(SimulationController.beforeStopLineR, - Y_MOVE, 0);
-
-
 				break;
 
 			case RR:
 				runCar(SimulationController.beforeStopLineR, - Y_MOVE, 0);
-				
 				break;
 			} // End of switch statement
 

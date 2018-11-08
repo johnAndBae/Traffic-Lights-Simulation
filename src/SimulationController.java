@@ -12,7 +12,8 @@ enum Lane {
 	TL, TM, TR, BL, BM, BR, LL, LR, RL, RR
 }
 
-public class SimulationController extends WindowController {
+
+public class SimulationController extends WindowController { 
 
 	private static final int FRAME_WIDTH = 900;
 	private static final int FRAME_HEIGHT = 600;
@@ -57,6 +58,9 @@ public class SimulationController extends WindowController {
 	public static final int beforeStopLineB = FRAME_HEIGHT - GRASS_Y + STOP_WIDTH;
 	public static final int beforeStopLineL = GRASS_X - STOP_WIDTH;
 	public static final int beforeStopLineR = FRAME_WIDTH - GRASS_X + STOP_WIDTH;
+
+	public static final int LEFT_TURN_L = GRASS_Y + CAR_OFFSET;
+	public static final int LEFT_TURN_R = GRASS_Y + 2 * LANE_WIDTH + CAR_OFFSET;
 
 	private static Color lightColor;
 
