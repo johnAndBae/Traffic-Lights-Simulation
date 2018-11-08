@@ -288,6 +288,8 @@ public class SimulationController extends WindowController {
 
 		if (newCar != null) {
 			lanes.get(newCar.getLane()).add(newCar);
+		    //System.out.println("New car dur " + newCar.getLane() + " and value " + lanes.get(newCar.getLane()).indexOf(newCar));
+		    
 		}
 
 		for (Signals s : signals) {
