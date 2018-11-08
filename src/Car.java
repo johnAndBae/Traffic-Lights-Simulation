@@ -258,7 +258,7 @@ public class Car extends ActiveObject {
 		}else {
 			boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
 			System.out.println("The boundary is " + boundary);
-			if (laneSignal.getSignal() == Color.GREEN || carPosition < boundary || carPosition < stoplineDistance) {
+			if (laneSignal.getSignal() == Color.GREEN || carPosition > boundary || carPosition < stoplineDistance) {
 				move(x, y);
 				if (carPosition < stoplineDistance) {
 					removeThisFromLane(lane); // pushes the car out
