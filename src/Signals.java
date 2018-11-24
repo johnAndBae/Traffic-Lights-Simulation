@@ -49,9 +49,7 @@ public class Signals extends ActiveObject {
 
 		if (currentSignal == red) {
 			turnRed();
-		}
-
-		else {
+		} else {
 			turnGreen();
 		}
 
@@ -74,7 +72,6 @@ public class Signals extends ActiveObject {
 	}
 
 	public void remove() {
-
 		signalBody.removeFromCanvas();
 		redLight.removeFromCanvas();
 		yellowLight.removeFromCanvas();
@@ -128,12 +125,11 @@ public class Signals extends ActiveObject {
 				turnRed();
 				pause(4500);
 			} else {
-				pause(800);
+				pause(1300);
 				turnGreen();
-				pause(4200);
+				pause(4500);
 			}
 		}
-
 	}
 }
 

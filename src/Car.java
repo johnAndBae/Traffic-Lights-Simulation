@@ -217,9 +217,11 @@ public class Car extends ActiveObject {
 		//System.out.println("The laneCode is : " + laneCode + " and the lane index is at : " + index);
 		
 		if (verticalCar) {
-			carPosition = body.getY() + CAR_LENGTH;
-		} else {
-			carPosition = body.getX() + CAR_LENGTH;
+			if( reverseCar ) { carPosition = body.getY(); } 
+			else { carPosition = body.getY() + CAR_LENGTH;}
+		} else { 
+			if( reverseCar ) { carPosition = body.getX();} 
+			else {carPosition = body.getX() + CAR_LENGTH;}
 		}
 		
 			
@@ -227,22 +229,22 @@ public class Car extends ActiveObject {
 		if (index > 0) {
 			if(!reverseCar) {
 			//System.out.println("Entered bruhh");
-			Car previous = lane.get(index - 1);
-			overlap = verticalCar ? previous.getLocation().getY() - GAP_SIZE : previous.getLocation().getX() - GAP_SIZE;
-			if (carPosition > overlap) {
-				return;
-			}
+				Car previous = lane.get(index - 1);
+				overlap = verticalCar ? previous.getLocation().getY() - GAP_SIZE : previous.getLocation().getX() - GAP_SIZE;
+				if (carPosition > overlap) {
+					return;
+				}
 			} else {
 			//System.out.println("Entered dude");
-		    Car previous = lane.get(index - 1);
-		    overlap = verticalCar ? previous.getLocation().getY() + CAR_LENGTH + CAR_LENGTH + GAP_SIZE : previous.getLocation().getX() + CAR_LENGTH + CAR_LENGTH + GAP_SIZE;
-		    if (carPosition < overlap) {
-		    	return;
-		    }
-		}
+				Car previous = lane.get(index - 1);
+				overlap = verticalCar ? previous.getLocation().getY() + CAR_LENGTH + GAP_SIZE : previous.getLocation().getX() + CAR_LENGTH + GAP_SIZE;
+				if (carPosition < overlap) {
+					return;
+				}
+			}
 		}
 
-
+		// For cars traveling toward positive directions (toward South and East)
 		if(!reverseCar) {
 			boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
 			//System.out.println("The boundary is " + boundary);
@@ -251,16 +253,16 @@ public class Car extends ActiveObject {
 				if (carPosition > stoplineDistance) {
 					removeThisFromLane(lane); // pushes the car out
 				}
-		}
-		}else {
-			boundary = stoplineDistance - (index * CAR_LENGTH + GAP_SIZE);
+			}
+		}else {		// For cars traveling toward negative directions (toward North and West)
+			boundary = stoplineDistance + (index * CAR_LENGTH + GAP_SIZE);
 			//System.out.println("The boundary is " + boundary);
 			if (laneSignal.getSignal() == Color.GREEN || carPosition > boundary || carPosition < stoplineDistance) {
 				move(x, y);
 				if (carPosition < stoplineDistance) {
 					removeThisFromLane(lane); // pushes the car out
 				}
-		}
+			}
 		}
 	}
 	
@@ -273,7 +275,7 @@ public class Car extends ActiveObject {
 				body.getY() < y ) {
 			
 			move(Y_MOVE * 2 / 3, Y_MOVE);
-			if (body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT) {
+			if ( body.getY() + CAR_LENGTH > SimulationController.beforeStopLineT ) {
 				removeThisFromLane(lane);
 			}
 		} else if( body.getY() >= y ) {
@@ -346,6 +348,7 @@ public class Car extends ActiveObject {
 		laneSignal = newSignal;
 	}
 
+	// Car moving simulation with association with traffic signals
 	public void run() {
 
 		while (moving) {

@@ -261,6 +261,10 @@ public class SimulationController extends WindowController {
 
 		signals.addAll(Arrays.asList(signalTS, signalTL, signalBS, signalBL, signalLS, signalLL, signalRS, signalRL));
 	}
+	private void defaultSignal() {
+		
+		
+	}
 
 	public void onMouseClick(Location point) {
 		Car newCar = null;
