@@ -11,7 +11,7 @@ public class Signals extends ActiveObject {
 	private static final int BOTTOM_ANGLE = 20;
 	private static final int LIGHT_SIZE = 30;
 	private static final int LIGHT_OFFSET = (SIGNAL_BODY_WIDTH - LIGHT_SIZE) / 2;
-	private static boolean leftTurn = false;
+	private boolean leftTurn;
 
 	private FilledRoundedRect signalBody;
 	private FilledOval redLight, yellowLight, greenLight;
@@ -86,8 +86,9 @@ public class Signals extends ActiveObject {
 			return red;
 		} else if (yellowLight.getColor() == Color.YELLOW) {
 			return yellow;
-		} else
+		} else {
 			return green;
+		}
 	}
 
 	public void turnGreen() {
@@ -149,20 +150,24 @@ public class Signals extends ActiveObject {
 	
 		while (true) {
 			
-			if( defaultSignal && SimulationController.lanes.get(Lane.LR).isEmpty() && 
+			if( defaultSignal && !leftTurn && SimulationController.lanes.get(Lane.LR).isEmpty() && 
 					SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalRS != null && 
 					SimulationController.signalRS.getSignal() == Color.RED ) {
 				pause(1000);
 				turnGreen();
-			} else if (defaultSignal && (!SimulationController.lanes.get(Lane.LR).isEmpty() ||
-					!SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalRS != null && 
-					SimulationController.signalRS.getSignal() == Color.RED)) {
+			} else if (defaultSignal && !leftTurn && (!SimulationController.lanes.get(Lane.LR).isEmpty() ||
+					!SimulationController.lanes.get(Lane.RR).isEmpty()) && SimulationController.signalRS != null && 
+					SimulationController.signalRS.getSignal() == Color.RED) {
 				runSignal(); // create another function that will time and operate the signals to change color
-			} else if (!defaultSignal && (!SimulationController.lanes.get(Lane.LR).isEmpty() || 
-					!SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalTS != null && 
-					SimulationController.signalTS.getSignal() == Color.RED)) {
+			} else if (!defaultSignal && !leftTurn && (!SimulationController.lanes.get(Lane.LR).isEmpty() || 
+					!SimulationController.lanes.get(Lane.RR).isEmpty()) && SimulationController.signalTS != null && 
+					SimulationController.signalTS.getSignal() == Color.RED) {
 				runSignal2();
 				pause(1000);
+	/*		} else if (defaultSignal && leftTurn && SimulationController.signalTS.getSignal() == Color.RED &&
+					SimulationController.signalBS.getSignal() == Color.RED && SimulationController.signalLS.getSignal() == Color.RED
+					&& SimulationController.signalRS.getSignal() == Color.RED){
+				runSignal2();*/
 			} else {
 				turnRed();
 				pause(10);

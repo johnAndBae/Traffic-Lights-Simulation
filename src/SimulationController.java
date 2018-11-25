@@ -236,17 +236,17 @@ public class SimulationController extends WindowController {
 		for (Lane lane : Lane.values()) {
 			lanes.put(lane, new LinkedList<Car>());
 		}
-	}
+	} 
 
 	private void initAndDrawSignals() {
 		signalTS = new Signals(GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH,
 				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, true, Color.GREEN, canvas);
 		signalTL = new Signals(GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2,
-				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, false, Color.RED, canvas);
+				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, true, Color.RED, canvas);
 
 		signalBS = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH,
 				GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, true, Color.GREEN, canvas);
-		signalBL = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, false,
+		signalBL = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, true,
 				Color.RED, canvas);
 
 		signalLS = new Signals(GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET,
