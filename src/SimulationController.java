@@ -23,8 +23,8 @@ public class SimulationController extends WindowController {
 			brokenLineBR3, brokenLineBL1, brokenLineBL2, brokenLineBL3, brokenLineLL, brokenLineLR, brokenLineLT,
 			brokenLineLB, laneTL, laneTM, laneTR, laneBL, laneBM, laneBR, laneLL, laneLR, laneRL, laneRR;
 
-	private Signals signalTL, signalTS, signalBL, signalBS, signalLL, signalLS, signalRL, signalRS;
-	private List<Signals> signals = new ArrayList<Signals>();
+	public static Signals signalTL, signalTS, signalBL, signalBS, signalLL, signalLS, signalRL, signalRS;
+	public static List<Signals> signals = new ArrayList<Signals>();
 	private Color streetColor = Color.DARK_GRAY;
 	private Color yellowLine = Color.YELLOW;
 	private Color regularLine = Color.WHITE;
@@ -124,10 +124,10 @@ public class SimulationController extends WindowController {
 		leftTurnLineR.setColor(regularLine);
 
 		drawBrokenLines();
+		
+		initCarQueues();
 
 		initAndDrawSignals();
-
-		initCarQueues();
 
 	}
 	
@@ -240,30 +240,26 @@ public class SimulationController extends WindowController {
 
 	private void initAndDrawSignals() {
 		signalTS = new Signals(GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH,
-				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.RED, canvas);
+				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, true, Color.GREEN, canvas);
 		signalTL = new Signals(GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2,
-				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, Color.RED, canvas);
+				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, true, false, Color.RED, canvas);
 
 		signalBS = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH,
-				GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, Color.RED, canvas);
-		signalBL = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true,
+				GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, false, true, Color.GREEN, canvas);
+		signalBL = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, false,
 				Color.RED, canvas);
 
 		signalLS = new Signals(GRASS_X - SIGNAL_OFFSET - SIGNAL_BODY_WIDTH, GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET,
-				false, Color.GREEN, canvas);
+				false, false, Color.RED, canvas);
 		signalLL = new Signals(GRASS_X - (SIGNAL_OFFSET + SIGNAL_BODY_WIDTH) * 2,
-				GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, Color.GREEN, canvas);
+				GRASS_Y + LINA_ST_WIDTH + SIGNAL_OFFSET, true, false, Color.RED, canvas);
 
 		signalRS = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET * 2 + SIGNAL_BODY_WIDTH,
-				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, Color.GREEN, canvas);
+				GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET, false, false, Color.RED, canvas);
 		signalRL = new Signals(GRASS_X + MAIN_ST_WIDTH + SIGNAL_OFFSET, GRASS_Y - SIGNAL_BODY_HEIGHT - SIGNAL_OFFSET,
-				true, Color.GREEN, canvas);
+				true, false, Color.RED, canvas);
 
 		signals.addAll(Arrays.asList(signalTS, signalTL, signalBS, signalBL, signalLS, signalLL, signalRS, signalRL));
-	}
-	private void defaultSignal() {
-		
-		
 	}
 
 	public void onMouseClick(Location point) {
@@ -288,6 +284,9 @@ public class SimulationController extends WindowController {
 			newCar = new Car(FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas);
 		} else if (laneRR.contains(point)) {
 			newCar = new Car(FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
+			/*if( signalRS.getSignal() == Color.RED ) {
+				signalTM.
+			}*/
 		}
 
 		if (newCar != null) {
@@ -296,11 +295,7 @@ public class SimulationController extends WindowController {
 		    
 		}
 
-		for (Signals s : signals) {
-			if (s.contains(point)) {
-				s.change();
-			}
-		}
+
 	}
 
 	public static void main(String[] args) {

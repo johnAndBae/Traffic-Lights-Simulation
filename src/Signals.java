@@ -20,13 +20,15 @@ public class Signals extends ActiveObject {
 	private static Color red = Color.RED;
 	private static Color yellow = Color.YELLOW;
 	private static Color green = Color.GREEN;
-
-	public Signals(double x, double y, boolean isLeftTurn, Color currentSignal, DrawingCanvas canvas) {
+	private boolean defaultSignal;
+	
+	public Signals(double x, double y, boolean isLeftTurn, boolean isDefault, Color currentSignal, DrawingCanvas canvas) {
 
 		// Create the body of signal
 		signalBody = new FilledRoundedRect(x, y, SIGNAL_BODY_WIDTH, SIGNAL_BODY_HEIGHT, TOP_ANGLE, BOTTOM_ANGLE,
 				canvas);
 		leftTurn = isLeftTurn;
+		defaultSignal = isDefault;
 
 		// Need to draw arrows for left-turn signals
 		if (isLeftTurn) {
@@ -116,18 +118,54 @@ public class Signals extends ActiveObject {
 		}
 	}
 
+	public void runSignal() {
+		if (getSignal() == Color.GREEN) {
+			turnYellow();
+			pause(1000);
+		} else if (getSignal() == Color.YELLOW) {
+			turnRed();
+			pause(4500);
+		} else {
+			pause(1300);
+			turnGreen();
+			pause(4500);
+		}
+	}
+	
+	public void runSignal2() {
+		if(getSignal() == Color.RED) {
+			pause(1300);
+			turnGreen();
+			pause(4500);
+			turnYellow();
+			pause(1000);
+		} else if (getSignal() == Color.YELLOW) {
+			turnRed();
+			pause(1000);
+		}
+	} 
+	
 	public void run() {
+	
 		while (true) {
-			if (getSignal() == Color.GREEN) {
-				turnYellow();
+			
+			if( defaultSignal && SimulationController.lanes.get(Lane.LR).isEmpty() && 
+					SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalRS != null && 
+					SimulationController.signalRS.getSignal() == Color.RED ) {
 				pause(1000);
-			} else if (getSignal() == Color.YELLOW) {
-				turnRed();
-				pause(4500);
-			} else {
-				pause(1300);
 				turnGreen();
-				pause(4500);
+			} else if (defaultSignal && (!SimulationController.lanes.get(Lane.LR).isEmpty() ||
+					!SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalRS != null && 
+					SimulationController.signalRS.getSignal() == Color.RED)) {
+				runSignal(); // create another function that will time and operate the signals to change color
+			} else if (!defaultSignal && (!SimulationController.lanes.get(Lane.LR).isEmpty() || 
+					!SimulationController.lanes.get(Lane.RR).isEmpty() && SimulationController.signalTS != null && 
+					SimulationController.signalTS.getSignal() == Color.RED)) {
+				runSignal2();
+				pause(1000);
+			} else {
+				turnRed();
+				pause(10);
 			}
 		}
 	}
