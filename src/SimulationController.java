@@ -17,11 +17,13 @@ public class SimulationController extends WindowController {
 
 	private static final int FRAME_WIDTH = 900;
 	private static final int FRAME_HEIGHT = 600;
-	private FilledRect background, mainSt, linaSt, yellowLineT, yellowLineB, yellowLineL, yellowLineR, stopLineB,
+	private FilledRect instBackground, background, mainSt, linaSt, yellowLineT, yellowLineB, yellowLineL, yellowLineR, stopLineB,
 			stopLineT, stopLineL, stopLineR, leftTurnLineL, leftTurnLineR, leftTurnLineT, leftTurnLineB, brokenLineTL1,
 			brokenLineTL2, brokenLineTL3, brokenLineTR1, brokenLineTR2, brokenLineTR3, brokenLineBR1, brokenLineBR2,
 			brokenLineBR3, brokenLineBL1, brokenLineBL2, brokenLineBL3, brokenLineLL, brokenLineLR, brokenLineLT,
 			brokenLineLB, laneTL, laneTM, laneTR, laneBL, laneBM, laneBR, laneLL, laneLR, laneRL, laneRR;
+	
+	private Text welcome, instruction0, instruction1, instruction2, instruction3, instruction4, instruction5;
 
 	public static Signals signalTL, signalTS, signalBL, signalBS, signalLL, signalLS, signalRL, signalRS;
 	public static List<Signals> signals = new ArrayList<Signals>();
@@ -29,6 +31,7 @@ public class SimulationController extends WindowController {
 	private Color yellowLine = Color.YELLOW;
 	private Color regularLine = Color.WHITE;
 	private Color grass = new Color(0, 200, 150);
+
 
 	private static final int LANE_WIDTH = 60;
 
@@ -61,8 +64,6 @@ public class SimulationController extends WindowController {
 
 	public static final int LEFT_TURN_L = GRASS_Y + CAR_OFFSET;
 	public static final int LEFT_TURN_R = GRASS_Y + 2 * LANE_WIDTH + CAR_OFFSET;
-
-	private static Color lightColor;
 
 
 	//Key: Lane, Value: LinkedList<Car>
@@ -128,9 +129,37 @@ public class SimulationController extends WindowController {
 		initCarQueues();
 
 		initAndDrawSignals();
+		
+		instBackground = new FilledRect (0, 0, FRAME_WIDTH, FRAME_HEIGHT, canvas);
+		welcome = new Text("Welcome to our Traffic Light Simulation!", 100, 100, canvas);
+		instruction0 = new Text("After this instruction, you will see..", 230, 200, canvas);
+		instruction1 = new Text("Main street (up/downward) and Lina street (sideways)", 150, 270, canvas);
+		instruction2 = new Text("Click on any lane to create cars", 270, 300, canvas);
+		instruction3 = new Text("Signals detect incoming cars and give them appropriate time in order", 50, 330, canvas);
+		instruction4 = new Text("By default, it will stay green on Main St.", 230, 360, canvas);
+		instruction5 = new Text("Begin the simulation by clicking anywhere on the screen.", 150, 450, canvas);
 
+
+		instBackground.setColor(new Color(200, 200, 200));
+		welcome.setFontSize(40);
+		instruction0.setFontSize(30);
+		instruction1.setFontSize(25);
+		instruction2.setFontSize(25);
+		instruction3.setFontSize(25);
+		instruction4.setFontSize(25);
+		instruction5.setFontSize(25);
 	}
 	
+	private void hideInstruction() {
+		instBackground.hide();
+		welcome.hide();
+		instruction0.hide();
+		instruction1.hide();
+		instruction2.hide();
+		instruction3.hide();
+		instruction4.hide();
+		instruction5.hide();
+	}
 	private void drawBrokenLines() {
 		brokenLineTL1 = new FilledRect(GRASS_X + LANE_WIDTH - LINE_OFFSET, 0, LINE_WIDTH, BROKEN_LINE_LENGTH, canvas);
 		brokenLineTL2 = new FilledRect(GRASS_X + LANE_WIDTH - LINE_OFFSET, BROKEN_LINE_DISTANCE, LINE_WIDTH,
@@ -263,39 +292,43 @@ public class SimulationController extends WindowController {
 	}
 
 	public void onMouseClick(Location point) {
-		Car newCar = null;
-		if (laneTL.contains(point)) {
-			newCar = new Car(laneTL.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TL, signalTL, canvas);
-		} else if (laneTM.contains(point)) {
-			newCar = new Car(laneTM.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TM, signalTS, canvas);
-		} else if (laneTR.contains(point)) {
-			newCar = new Car(laneTR.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TR, signalTS, canvas);
-		} else if (laneBL.contains(point)) {
-			newCar = new Car(laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas);
-		} else if (laneBM.contains(point)) {
-			newCar = new Car(laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas);
-		} else if (laneBR.contains(point)) {
-			newCar = new Car(laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas);
-		} else if (laneLL.contains(point)) {
-			newCar = new Car(-CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas);
-		} else if (laneLR.contains(point)) {
-			newCar = new Car(-CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas);
-		} else if (laneRL.contains(point)) {
-			newCar = new Car(FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas);
-		} else if (laneRR.contains(point)) {
-			newCar = new Car(FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
-			/*if( signalRS.getSignal() == Color.RED ) {
-				signalTM.
-			}*/
+		
+		if(! instBackground.isHidden()) {
+			hideInstruction();
 		}
+		
+		else {
+			Car newCar = null;
+			if (laneTL.contains(point)) {
+				newCar = new Car(laneTL.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TL, signalTL, canvas);
+			} else if (laneTM.contains(point)) {
+				newCar = new Car(laneTM.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TM, signalTS, canvas);
+			} else if (laneTR.contains(point)) {
+				newCar = new Car(laneTR.getX() + CAR_OFFSET, -CAR_LENGTH, Lane.TR, signalTS, canvas);
+			} else if (laneBL.contains(point)) {
+				newCar = new Car(laneBL.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BL, signalBL, canvas);
+			} else if (laneBM.contains(point)) {
+				newCar = new Car(laneBM.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BM, signalBS, canvas);
+			} else if (laneBR.contains(point)) {
+				newCar = new Car(laneBR.getX() + CAR_OFFSET, FRAME_HEIGHT, Lane.BR, signalBS, canvas);
+			} else if (laneLL.contains(point)) {
+				newCar = new Car(-CAR_LENGTH, laneLL.getY() + CAR_OFFSET, Lane.LL, signalLL, canvas);
+			} else if (laneLR.contains(point)) {
+				newCar = new Car(-CAR_LENGTH, laneLR.getY() + CAR_OFFSET, Lane.LR, signalLS, canvas);
+			} else if (laneRL.contains(point)) {
+				newCar = new Car(FRAME_WIDTH, laneRL.getY() + CAR_OFFSET, Lane.RL, signalRL, canvas);
+			} else if (laneRR.contains(point)) {
+				newCar = new Car(FRAME_WIDTH, laneRR.getY() + CAR_OFFSET, Lane.RR, signalRS, canvas);
+				/*if( signalRS.getSignal() == Color.RED ) {
+					signalTM.
+				}*/
+			}
 
-		if (newCar != null) {
-			lanes.get(newCar.getLane()).add(newCar);
-		    //System.out.println("New car dur " + newCar.getLane() + " and value " + lanes.get(newCar.getLane()).indexOf(newCar));
-		    
+			if (newCar != null) {
+				lanes.get(newCar.getLane()).add(newCar);
+			    //System.out.println("New car dur " + newCar.getLane() + " and value " + lanes.get(newCar.getLane()).indexOf(newCar));
+			}
 		}
-
-
 	}
 
 	public static void main(String[] args) {

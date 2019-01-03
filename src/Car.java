@@ -228,14 +228,12 @@ public class Car extends ActiveObject {
 		// if this car overlaps with previous car, don't move 
 		if (index > 0) {
 			if(!reverseCar) {
-			//System.out.println("Entered bruhh");
 				Car previous = lane.get(index - 1);
 				overlap = verticalCar ? previous.getLocation().getY() - GAP_SIZE : previous.getLocation().getX() - GAP_SIZE;
 				if (carPosition > overlap) {
 					return;
 				}
 			} else {
-			//System.out.println("Entered dude");
 				Car previous = lane.get(index - 1);
 				overlap = verticalCar ? previous.getLocation().getY() + CAR_LENGTH + GAP_SIZE : previous.getLocation().getX() + CAR_LENGTH + GAP_SIZE;
 				if (carPosition < overlap) {
@@ -254,7 +252,7 @@ public class Car extends ActiveObject {
 					removeThisFromLane(lane); // pushes the car out
 				}
 			}
-		}else {		// For cars traveling toward negative directions (toward North and West)
+		} else {		// For cars traveling toward negative directions (toward North and West)
 			boundary = stoplineDistance + (index * CAR_LENGTH + GAP_SIZE);
 			//System.out.println("The boundary is " + boundary);
 			if (laneSignal.getSignal() == Color.GREEN || carPosition > boundary || carPosition < stoplineDistance) {
@@ -285,7 +283,6 @@ public class Car extends ActiveObject {
 			move(Y_MOVE, 0);
 		}
 	}
-	/********************************* John ! You start working from here !! **********************************/
 	private void rotateCar() {
 		
 		double temp;
@@ -370,11 +367,11 @@ public class Car extends ActiveObject {
 				runCar(SimulationController.beforeStopLineT, 0, Y_MOVE);
 				break;
 			case BL:
-				if( body.getY() - CAR_LENGTH > SimulationController.beforeStopLineB ) {
+				if( body.getY() > SimulationController.beforeStopLineB ) {
 					runCar(SimulationController.beforeStopLineB, 0, - Y_MOVE);
-				} else {
+				} /*else {
 					leftTurn( SimulationController.beforeStopLineB, 0, SimulationController.LEFT_TURN_L );
-				}
+				}*/
 				break;
 
 			case BM:
@@ -412,7 +409,6 @@ public class Car extends ActiveObject {
 				break;
 			}
 		} // End of while
-
 	} // End of run()
 
 	// To create another car when this car is clicked in a lane
